@@ -3,7 +3,7 @@ import json
 __author__ = 'Simon & Oskar'
 
 def parse_json():
-    fields = {"requester_account_age_in_days_at_request",
+    fields = ['requester_account_age_in_days_at_request',
               'requester_days_since_first_post_on_raop_at_request',
               'requester_number_of_posts_on_raop_at_request',
               'requester_number_of_posts_at_request',
@@ -12,7 +12,7 @@ def parse_json():
               'requester_number_of_subreddits_at_request',
               'requester_upvotes_minus_downvotes_at_request',
               'unix_timestamp_of_request',
-              'requester_received_pizza'}
+              'requester_received_pizza']
 
     features = ['acc_age',
                 'days_since_first_roap_post',
