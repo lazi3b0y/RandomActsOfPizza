@@ -16,11 +16,11 @@ def parse_json():
 
     features = ['acc_age',
                 'days_since_first_roap_post',
-                'nr_posts_on_roap',
-                'nr_posts_total',
-                'nr_comments_total',
-                'nr_comments_in_roap',
-                'nr_subreddits',
+                'n_posts_on_roap',
+                'n_posts_total',
+                'n_comments_total',
+                'n_comments_in_roap',
+                'n_subreddits',
                 'upvotes_minus_downvotes',
                 'time_stamp',
                 'received_pizza']
