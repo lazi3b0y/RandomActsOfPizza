@@ -1,7 +1,8 @@
-__author__ = 'Simon & Oskar'
 import pandas as ps
 import numpy as np
 import scipy.stats
+
+__author__ = 'Simon & Oskar'
 
 def __init__(self, criterion = 'gini', max_feature = None, max_depth = None, min_samples_leaf = None, laplace = 0):
     self.criterion = criterion # gini or entropy
