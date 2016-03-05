@@ -65,7 +65,6 @@ class DecisionTree:
                     else:
                         currentNode = currentNode.rightChild
                 else:
-                    #cn = [c for c in currentNode]
                     r = Counter(currentNode.tolist()).most_common(1)
                     result.append(r[0][0])
                     break
@@ -91,23 +90,20 @@ class DecisionTree:
                     break
         return array(result)
 
-    def print(self): # visualize tree (console)
-        tree = self.tree
-        depth = 0
+    def print(self, tree, depth = 0): # visualize tree (console)
         if type(tree) is type(DecisionTree()):
             v = "+--"
             for i in range(depth):
                 v = "|  " + v
             v += " " + array_str(tree.value)
             print(v)
-            self.pTree(tree.leftChild, depth + 1)
-            self.pTree(tree.rightChild, depth + 1)
+            self.print(tree.leftChild, depth + 1)
+            self.print(tree.rightChild, depth + 1)
         else:
             v = "+-"
             for i in range(depth):
                 v = "|  " + v
             v += "["
-            #for n in node:
             v += str(Counter(tree).most_common(2)) + ", "
             v = v[:-2] + "]"
             print(v)
