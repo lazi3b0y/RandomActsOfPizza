@@ -1,5 +1,6 @@
 from numpy import unique, array, zeros, array_str, argmin
 from collections import Counter
+from utils.print import Print
 
 __author__ = 'Simon & Oskar'
 
@@ -90,20 +91,6 @@ class DecisionTree:
                     break
         return array(result)
 
-    def print(self, tree, depth = 0): # visualize tree (console)
-        if type(tree) is type(DecisionTree()):
-            v = "+--"
-            for i in range(depth):
-                v = "|  " + v
-            v += " " + array_str(tree.value)
-            print(v)
-            self.print(tree.leftChild, depth + 1)
-            self.print(tree.rightChild, depth + 1)
-        else:
-            v = "+-"
-            for i in range(depth):
-                v = "|  " + v
-            v += "["
-            v += str(Counter(tree).most_common(2)) + ", "
-            v = v[:-2] + "]"
-            print(v)
+    def print(self): # visualize tree (console)
+        depth = 0
+        Print.tree(self, depth)
