@@ -60,7 +60,7 @@ class DecisionTree:
         for row in x:
             currentNode = self.tree
             while True:
-                if type(currentNode) is type(DecisionTree()):
+                if type(currentNode) is type(self):
                     if row[currentNode.value[0]] <= currentNode.value[1]:
                         currentNode = currentNode.leftChild
                     else:
@@ -76,7 +76,7 @@ class DecisionTree:
         for row in x:
             currentNode = self.tree
             while(True):
-                if type(currentNode) is type(DecisionTree()):
+                if type(currentNode) is type(self):
                     if row[currentNode.value[0]] <= currentNode.value[1]:
                         currentNode = currentNode.leftChild
                     else:

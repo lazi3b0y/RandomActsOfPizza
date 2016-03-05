@@ -1,7 +1,7 @@
 import scipy.stats
 from numpy import array_str
 from collections import Counter
-from utils.parser import parse_json, parse_csv
+from utils.parse import Parse
 from prediction_classifiers.decision_tree import DecisionTree
 
 __author__ = 'Simon & Oskar'
@@ -39,8 +39,8 @@ class Print:
             print(v)
 
     if __name__ == '__main__':
-        parse_json()
-        csv_data = parse_csv('resources/raop.csv')
+        Parse.json()
+        csv_data = Parse.csv('resources/raop.csv')
 
         csv(csv_data)
         spearman_and_pearson(csv_data)
