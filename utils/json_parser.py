@@ -1,4 +1,6 @@
 import json
+import numpy
+import csv
 
 __author__ = 'Simon & Oskar'
 
