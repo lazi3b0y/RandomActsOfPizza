@@ -1,4 +1,4 @@
-from numpy import unique, array, zeros, array_str
+from numpy import unique, array, zeros, array_str, argmin
 from collections import Counter
 
 __author__ = 'Simon & Oskar'
@@ -11,8 +11,48 @@ class DecisionTree:
         self.min_samples_leaf = min_samples_leaf # minimum leaf size
         self.laplace = laplace # laplace correction for probability estimation
 
+        self.value = None
+        self.leftChild = None
+        self.rightChild = None
+
     def fit(self, x, y): # train model
         self.n_classes = unique(y)
+
+        cur_max_depth = self.max_depth
+        if self.max_features is None:
+            self.max_features = x.size
+        elif self.max_features > x.size:
+            self.max_features = x.size
+        else:
+            self.max_features = self.max_features
+
+        if self.max_depth is not None and self.max_depth <= 0:
+            return y
+
+        if self.max_depth is not None:
+            cur_max_depth = self.max_depth - 1
+
+        if len(x) <= self.min_samples_leaf:
+            return y
+
+        if unique(y).size == 1:
+            return y
+
+        splits = array(self.split(x, y))
+
+        if splits.size <= 0:
+            return y
+
+        i = argmin(splits[:, 2])
+        self.value = splits[i]
+        leftSplit = x[:, self.value[0]] <= self.value[1]
+        rightSplit = x[:, self.value[0]] > self.value[1]
+        l = x[leftSplit]
+        r = x[rightSplit]
+        self.leftChild = self.fit(l, y[leftSplit], cur_max_depth, self.min_samples_leaf, self.max_features)
+        self.rightChild = self.fit(r, y[rightSplit], cur_max_depth, self.min_samples_leaf, self.max_features)
+
+        return self
 
     def predict(self, x): # classify objects
         result = list()
