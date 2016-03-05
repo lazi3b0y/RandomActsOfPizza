@@ -1,6 +1,5 @@
 import scipy.stats
-from pandas import read_csv
-from utils.json_parser import parse_json
+from utils.parser import parse_json, parse_csv
 
 __author__ = 'Simon & Oskar'
 
@@ -19,7 +18,7 @@ def print_spearman_and_pearson(data):
 
 if __name__ == '__main__':
     parse_json()
-    csv_data = read_csv('resources/raop.csv')
+    csv_data = parse_csv('resources/roap.csv')
 
     print_csv(csv_data)
     print_spearman_and_pearson(csv_data)

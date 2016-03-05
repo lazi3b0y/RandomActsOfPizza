@@ -1,4 +1,4 @@
-import numpy
+from numpy import unique
 
 __author__ = 'Simon & Oskar'
 
@@ -13,5 +13,5 @@ class RandomForest:
         self.bagging = 0
         self.sample_size = sample_size
 
-    def fit(self, X, y): # train model
-        self.n_classes = numpy.unique(y)
+    def fit(self, x, y): # train model
+        self.n_classes = unique(y)

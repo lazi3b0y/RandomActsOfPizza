@@ -1,6 +1,5 @@
-import json
-import numpy
-import csv
+from json import loads
+from pandas import read_csv
 
 __author__ = 'Simon & Oskar'
 
@@ -28,7 +27,7 @@ def parse_json():
                 'received_pizza']
 
     json_file = open('resources/train.json', 'r')
-    json_data = json.loads(json_file.read())
+    json_data = loads(json_file.read())
     json_file.close()
 
     out_file = open('resources/raop.csv', 'w+')
@@ -37,3 +36,7 @@ def parse_json():
     for entry in json_data:
         row = ','.join([str(float(entry[field])) for field in fields])
         out_file.write('{}\n'.format(row))
+
+def parse_csv(file_path):
+    csv_data = read_csv(file_path)
+    return csv_data

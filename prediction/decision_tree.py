@@ -1,5 +1,5 @@
 import pandas
-import numpy
+from numpy import unique
 import scipy.stats
 
 __author__ = 'Simon & Oskar'
@@ -12,8 +12,8 @@ class DecisionTree:
         self.min_samples_leaf = min_samples_leaf # minimum leaf size
         self.laplace = laplace # laplace correction for probability estimation
 
-    def fit(X, y): # train model
-
+    def fit(self, x, y): # train model
+        self.n_classes = unique(y)
         """
     def predict(X): # classify objects
 
