@@ -1,11 +1,9 @@
-import pandas
 from numpy import unique
-import scipy.stats
 
 __author__ = 'Simon & Oskar'
 
 class DecisionTree:
-    def __init__(self, criterion = 'gini', max_feature = None, max_depth = None, min_samples_leaf = None, laplace = 0):
+    def __init__(self, criterion = 'gini', max_feature = None, max_depth = None, min_samples_leaf = 1, laplace = 0):
         self.criterion = criterion # gini or entropy
         self.max_feature = max_feature # random subspace size
         self.max_depth = max_depth  # maximum leaf depth

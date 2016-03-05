@@ -18,7 +18,7 @@ def print_spearman_and_pearson(data):
 
 if __name__ == '__main__':
     parse_json()
-    csv_data = parse_csv('resources/roap.csv')
+    csv_data = parse_csv('resources/raop.csv')
 
     print_csv(csv_data)
     print_spearman_and_pearson(csv_data)
