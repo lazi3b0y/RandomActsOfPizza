@@ -1,6 +1,7 @@
 from numpy import unique, array, zeros, argmin, delete, arange
 from collections import Counter
 from utils.print import Print
+import math
 
 __author__ = 'Simon & Oskar'
 
@@ -13,8 +14,8 @@ class DecisionTree:
         self.laplace = laplace # laplace correction for probability estimation
 
         self.value = None
-        self.leftChild = None
-        self.rightChild = None
+        self.left_child = None
+        self.right_child = None
 
     def fit(self, x, y): # train model
         self.n_classes = unique(y)
@@ -50,23 +51,23 @@ class DecisionTree:
         right_split = x[:, self.value[0]] > self.value[1]
         l = x[left_split]
         r = x[right_split]
-        self.leftChild = self.fit(l, y[left_split], cur_max_depth, self.min_samples_leaf, self.max_features)
-        self.rightChild = self.fit(r, y[right_split], cur_max_depth, self.min_samples_leaf, self.max_features)
+        self.left_child = self.fit(l, y[left_split], cur_max_depth, self.min_samples_leaf, self.max_features)
+        self.right_child = self.fit(r, y[right_split], cur_max_depth, self.min_samples_leaf, self.max_features)
 
         return self
 
     def predict(self, x): # classify objects
         result = list()
         for row in x:
-            currentNode = self.tree
+            current_node = self.tree
             while True:
-                if type(currentNode) is type(self):
-                    if row[currentNode.value[0]] <= currentNode.value[1]:
-                        currentNode = currentNode.leftChild
+                if type(current_node) is type(self):
+                    if row[current_node.value[0]] <= current_node.value[1]:
+                        current_node = current_node.left_child
                     else:
-                        currentNode = currentNode.rightChild
+                        current_node = current_node.right_child
                 else:
-                    r = Counter(currentNode.tolist()).most_common(1)
+                    r = Counter(current_node.tolist()).most_common(1)
                     result.append(r[0][0])
                     break
         return array(result)
@@ -74,19 +75,19 @@ class DecisionTree:
     def predict_proba(self, x): # class probability estimation
         result = list()
         for row in x:
-            currentNode = self.tree
+            current_node = self.tree
             while(True):
-                if type(currentNode) is type(self):
-                    if row[currentNode.value[0]] <= currentNode.value[1]:
-                        currentNode = currentNode.leftChild
+                if type(current_node) is type(self):
+                    if row[current_node.value[0]] <= current_node.value[1]:
+                        current_node = current_node.left_child
                     else:
-                        currentNode = currentNode.rightChild
+                        current_node = current_node.right_child
                 else:
                     r = zeros(self.n_classes.shape).astype('float')
-                    for c in currentNode:
+                    for c in current_node:
                         for i in range(len(self.n_classes)):
                             if c == self.n_classes[i]:
-                                r[i] += 1.0 / float(len(currentNode))
+                                r[i] += 1.0 / float(len(current_node))
                     result.append(r)
                     break
         return array(result)
@@ -107,28 +108,28 @@ class DecisionTree:
                     break
         return s
 
-    #def gini(self, x, y):
-    #    u = unique(y)
-    #    result = 0
-    #    for value in u:
-    #        result += math.pow(self.probability((y[y == value]).shape[0], (y[y != value]).shape[0]), 2)
-    #    return 1.0 - result
+    def gini(self, x, y):
+       u = unique(y)
+       result = 0
+       for value in u:
+           result += math.pow(self.probability((y[y == value]).shape[0], (y[y != value]).shape[0]), 2)
+       return 1.0 - result
 
-    #def probability(self, a, b):
-    #    if a+b == 0: return 0
-    #    return float(a)/float((a+b))
+    def probability(self, a, b):
+       if a+b == 0: return 0
+       return float(a)/float((a+b))
 
-    #def ginisplit(self, n1, n2, y):
-    #    precords = float(n1.size + n2.size)
-    #    return (float(n1.size)/precords) * self.gini(n1, y[0]) + (float(n2.size) / precords) * self.gini(n2, y[1])
+    def ginisplit(self, n1, n2, y):
+       precords = float(n1.size + n2.size)
+       return (float(n1.size)/precords) * self.gini(n1, y[0]) + (float(n2.size) / precords) * self.gini(n2, y[1])
 
-    #def laplace(self, x):
-    #    result = []
-    #    classes = unique(x)
-    #    for c in classes:
-    #        t = x[x == c]
-    #        result.append(float(t.shape[0] + 1) / float(x.shape[0] + classes.shape[0]))
-    #    return result
+    def laplace(self, x):
+       result = []
+       classes = unique(x)
+       for c in classes:
+           t = x[x == c]
+           result.append(float(t.shape[0] + 1) / float(x.shape[0] + classes.shape[0]))
+       return result
 
     def print(self): # visualize tree (console)
         depth = 0
