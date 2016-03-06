@@ -67,8 +67,8 @@ class DecisionTree:
                     else:
                         current_node = current_node.right_child
                 else:
-                    r = Counter(current_node.tolist()).most_common(1)
-                    result.append(r[0][0])
+                    most_common_element = Counter(current_node.tolist()).most_common(1)
+                    result.append(most_common_element[0][0])
                     break
         return array(result)
 
@@ -84,9 +84,9 @@ class DecisionTree:
                         current_node = current_node.right_child
                 else:
                     r = zeros(self.n_classes.shape).astype('float')
-                    for c in current_node:
+                    for class_element in current_node:
                         for i in range(len(self.n_classes)):
-                            if c == self.n_classes[i]:
+                            if class_element == self.n_classes[i]:
                                 r[i] += 1.0 / float(len(current_node))
                     result.append(r)
                     break
@@ -95,23 +95,22 @@ class DecisionTree:
     def split(self, features, classes):
         s = list()
         for i in range(features.shape[1]):
-            f = features[:, i]
-            u = unique(f)
-            #if u.size > 10:
-            u = delete(u, arange(0, u.size, 1.2))
-            for splitI in u:
-                l = f[f <= splitI]
-                r = f[f > splitI]
-                if l.size == 0 or r.size == 0: continue
-                s.append([i, splitI, self.ginisplit(l, r, (classes[:l.size], classes[l.size:]))])
+            feature_data = features[:, i]
+            unique_data = unique(feature_data)
+            unique_data = delete(unique_data, arange(0, unique_data.size, 1.2))
+            for splitIndex in unique_data:
+                leftNodes = feature_data[feature_data <= splitIndex]
+                rightNodes = feature_data[feature_data > splitIndex]
+                if leftNodes.size == 0 or rightNodes.size == 0: continue
+                s.append([i, splitIndex, self.ginisplit(leftNodes, rightNodes, (classes[:leftNodes.size], classes[leftNodes.size:]))])
                 if len(s) >= self.max_features:
                     break
         return s
 
     def gini(self, x, y):
-       u = unique(y)
+       unique_value = unique(y)
        result = 0
-       for value in u:
+       for value in unique_value:
            result += math.pow(self.probability((y[y == value]).shape[0], (y[y != value]).shape[0]), 2)
        return 1.0 - result
 
@@ -119,16 +118,16 @@ class DecisionTree:
        if a+b == 0: return 0
        return float(a)/float((a+b))
 
-    def ginisplit(self, n1, n2, y):
-       precords = float(n1.size + n2.size)
-       return (float(n1.size)/precords) * self.gini(n1, y[0]) + (float(n2.size) / precords) * self.gini(n2, y[1])
+    def ginisplit(self, leftNodes, rightNodes, y):
+       precords = float(leftNodes.size + rightNodes.size)
+       return (float(leftNodes.size)/precords) * self.gini(leftNodes, y[0]) + (float(rightNodes.size) / precords) * self.gini(rightNodes, y[1])
 
     def laplace(self, x):
        result = []
-       classes = unique(x)
-       for c in classes:
+       unique_classes = unique(x)
+       for c in unique_classes:
            t = x[x == c]
-           result.append(float(t.shape[0] + 1) / float(x.shape[0] + classes.shape[0]))
+           result.append(float(t.shape[0] + 1) / float(x.shape[0] + unique_classes.shape[0]))
        return result
 
     def print(self): # visualize tree (console)
