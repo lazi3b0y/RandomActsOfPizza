@@ -2,32 +2,43 @@ from scipy.stats import wilcoxon
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import cross_validation, metrics
-from numpy import unique, array
+from numpy import unique, array, concatenate
 from time import time
 from classifiers.decision_tree import DecisionTree
 from classifiers.random_forest import RandomForest
-from utils.parse import Parse
+from utils.parse import csv, json
 
 __author__ = 'Simon & Oskar'
 
+
 def experiment():
+    json()
+    csv_data = csv('resources/raop.csv')
 
-    set, classSet = Parse.csv('datasets/raop.csv')
+    class_set = csv_data['received_pizza']
+    feature_set = csv_data[[
+        'acc_age',
+        'days_since_first_roap_post',
+        'n_posts_on_roap',
+        'n_posts_total',
+        'n_comments_total',
+        'n_comments_in_roap',
+        'n_subreddits',
+        'upvotes_minus_downvotes',
+        'time_stamp',
+    ]]
+    feature_set = feature_set.ix[1:]
+    print("Random guessing value: {}".format((1.0 / float(unique(class_set).shape[0]))))
 
-    print("Random guessing value: {}".format((1.0 / float(unique(classSet).shape[0]))))
-
-    custom_decision_tree = DecisionTree(max_depth=10, min_samples_leaf=30)
-    custom_random_forest = RandomForest()
-    sklearn_decision_tree = DecisionTreeClassifier()
-    sklearn_random_forest = RandomForestClassifier()
-
-    classifiers = {'custom_decision_tree': custom_decision_tree,
-                   'custom_random_forest': custom_random_forest,
-                   'sklearn_decision_tree': sklearn_decision_tree,
-                   'sklearn_random_forest': sklearn_random_forest}
+    classifiers = {
+        'custom_decision_tree': DecisionTree(max_depth=10, min_samples_leaf=30),
+        'custom_random_forest': RandomForest(),
+        'sklearn_decision_tree': DecisionTreeClassifier(),
+        'sklearn_random_forest': RandomForestClassifier(),
+    }
 
     folds = 2
-    kf = cross_validation.KFold(set.shape[0], n_folds=folds)
+    kf = cross_validation.KFold(feature_set.shape[0], n_folds=folds)
     predictions = {}
     for label, classifier in classifiers.items():
         result = list()
@@ -42,13 +53,13 @@ def experiment():
 
         print(label)
         for train, test in kf:
-            train_set = set[train]
-            train_class = classSet[train]
-            test_set = set[test]
-            test_class = classSet[test]
+            train_feature_set = feature_set[train]
+            train_class_set = class_set[train]
+            test_feature_set = feature_set[test]
+            test_class_set = class_set[test]
 
             start = time()
-            classifier.fit(train_set, train_class.ravel())
+            classifier.fit(train_feature_set, train_class_set.ravel())
 
             # If the current classifier is our own decision tree,
             # print a visualization of it in the console.
@@ -58,11 +69,30 @@ def experiment():
             avg_train_time += time() - start
 
             start = time()
-            p = classifier.predict(test_set)
-            prob.append(classifier.predict_proba(test_set))
+            prediction_result = classifier.predict(test_feature_set)
+            prob.append(classifier.predict_proba(test_feature_set))
             avg_test_time += time() - start
 
-            result.append(HelpFunctions.convert_pred_and_class_sets_to_values(test_class, p))
+
+
+            trueSet = array([c[0] for c in test_class_set])
+            predSet = array([p for p in prediction_result])
+
+            u = unique(concatenate((trueSet, predSet)))
+
+            for i in range(test_class_set.shape[0]):
+                for j in range(u.shape[0]):
+                    if test_class_set[i] == u[j]:
+                        trueSet[i] = j
+                    if prediction_result[i] == u[j]:
+                        predSet[i] = j
+
+            trueSet = trueSet.astype('float')
+            predSet = predSet.astype('float')
+
+
+
+            result.append(trueSet, predSet)
 
         predictions[label] = list()
         for r1 in range(len(result)):
