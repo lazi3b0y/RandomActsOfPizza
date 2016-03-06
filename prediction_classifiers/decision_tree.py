@@ -1,4 +1,4 @@
-from numpy import unique, array, zeros, array_str, argmin
+from numpy import unique, array, zeros, argmin
 from collections import Counter
 from utils.print import Print
 
@@ -15,7 +15,7 @@ class DecisionTree:
         self.value = None
         self.leftChild = None
         self.rightChild = None
-
+    # bög oskar find me
     def fit(self, x, y): # train model
         self.n_classes = unique(y)
 
