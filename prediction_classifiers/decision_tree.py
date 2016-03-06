@@ -1,6 +1,6 @@
 from numpy import unique, array, zeros, argmin, delete, arange
 from collections import Counter
-from utils.print_ import Print
+from utils.print import Print
 
 __author__ = 'Simon & Oskar'
 
@@ -46,12 +46,12 @@ class DecisionTree:
 
         i = argmin(splits[:, 2])
         self.value = splits[i]
-        leftSplit = x[:, self.value[0]] <= self.value[1]
-        rightSplit = x[:, self.value[0]] > self.value[1]
-        l = x[leftSplit]
-        r = x[rightSplit]
-        self.leftChild = self.fit(l, y[leftSplit], cur_max_depth, self.min_samples_leaf, self.max_features)
-        self.rightChild = self.fit(r, y[rightSplit], cur_max_depth, self.min_samples_leaf, self.max_features)
+        left_split = x[:, self.value[0]] <= self.value[1]
+        right_split = x[:, self.value[0]] > self.value[1]
+        l = x[left_split]
+        r = x[right_split]
+        self.leftChild = self.fit(l, y[left_split], cur_max_depth, self.min_samples_leaf, self.max_features)
+        self.rightChild = self.fit(r, y[right_split], cur_max_depth, self.min_samples_leaf, self.max_features)
 
         return self
 
@@ -113,7 +113,6 @@ class DecisionTree:
     #    for value in u:
     #        result += math.pow(self.probability((y[y == value]).shape[0], (y[y != value]).shape[0]), 2)
     #    return 1.0 - result
-
 
     #def probability(self, a, b):
     #    if a+b == 0: return 0
