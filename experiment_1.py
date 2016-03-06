@@ -10,7 +10,7 @@ from utils.parse import csv, json
 
 __author__ = 'Simon & Oskar'
 
-
+# TODO: Restructure the code somewhat to make it look less like JJJ's. Ayyyy lmao Kappa 123
 def experiment():
     json()
     csv_data = csv('resources/raop.csv')
@@ -32,7 +32,6 @@ def experiment():
     folds = 2
     kf = cross_validation.KFold(feature_set.shape[0], n_folds=folds)
     predictions = {}
-    # TODO: Restructure the code somewhat to make it look less like JJJ's. Ayyyy lmao Kappa 123
     for label, classifier in classifiers.items():
         result = list()
         prob = list()
