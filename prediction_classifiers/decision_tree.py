@@ -91,6 +91,47 @@ class DecisionTree:
                     break
         return array(result)
 
+    def split(self, features, classes):
+        s = list()
+        for i in range(features.shape[1]):
+            f = features[:, i]
+            u = unique(f)
+            #if u.size > 10:
+            u = delete(u, arange(0, u.size, 1.2))
+            for splitI in u:
+                l = f[f <= splitI]
+                r = f[f > splitI]
+                if l.size == 0 or r.size == 0: continue
+                s.append([i, splitI, self.ginisplit(l, r, (classes[:l.size], classes[l.size:]))])
+                if len(s) >= self.max_features:
+                    break
+        return s
+
+    #RÖVVVVVVVVVVVVV
+    #def gini(self, x, y):
+    #    u = unique(y)
+    #    result = 0
+    #    for value in u:
+    #        result += math.pow(self.probability((y[y == value]).shape[0], (y[y != value]).shape[0]), 2)
+    #    return 1.0 - result
+
+
+    #def probability(self, a, b):
+    #    if a+b == 0: return 0
+    #    return float(a)/float((a+b))
+
+    #def ginisplit(self, n1, n2, y):
+    #    precords = float(n1.size + n2.size)
+    #    return (float(n1.size)/precords) * self.gini(n1, y[0]) + (float(n2.size) / precords) * self.gini(n2, y[1])
+
+    #def laplace(self, x):
+    #    result = []
+    #    classes = unique(x)
+    #    for c in classes:
+    #        t = x[x == c]
+    #        result.append(float(t.shape[0] + 1) / float(x.shape[0] + classes.shape[0]))
+    #    return result
+
     def print(self): # visualize tree (console)
         depth = 0
         Print.tree(self, depth)
