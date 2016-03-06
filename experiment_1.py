@@ -10,7 +10,7 @@ from utils.parse import Parse
 
 __author__ = 'Simon & Oskar'
 
-def main():
+def experiment():
 
     set, classSet = Parse.csv('datasets/raop.csv')
 
@@ -44,13 +44,13 @@ def main():
 
         print(k)
         for train, test in kf:
-            trainSet = set[train]
-            trainClass = classSet[train]
-            testSet = set[test]
-            testClass = classSet[test]
+            train_set = set[train]
+            train_class = classSet[train]
+            test_set = set[test]
+            test_class = classSet[test]
 
             start = time()
-            v.fit(trainSet, trainClass.ravel())
+            v.fit(train_set, train_class.ravel())
 
             if k == 'ourDT' and printed == False:
                 v.printTree() # Prints a tree
@@ -59,11 +59,11 @@ def main():
             avg_train_time += time() - start
 
             start = time()
-            p = v.predict(testSet)
-            prob.append(v.predict_proba(testSet))
+            p = v.predict(test_set)
+            prob.append(v.predict_proba(test_set))
             avg_test_time += time() - start
 
-            result.append(HelpFunctions.convert_pred_and_class_sets_to_values(testClass, p))
+            result.append(HelpFunctions.convert_pred_and_class_sets_to_values(test_class, p))
 
         predictions[k] = list()
         for r1 in range(len(result)):
@@ -100,4 +100,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    experiment()
