@@ -1,4 +1,4 @@
-from numpy import unique, array, zeros, array_str, argmin
+from numpy import unique, array, zeros, argmin
 from collections import Counter
 from utils.print import Print
 
