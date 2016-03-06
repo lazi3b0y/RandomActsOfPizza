@@ -16,22 +16,20 @@ def experiment():
 
     print("Random guessing value: {}".format((1.0 / float(unique(classSet).shape[0]))))
 
-    ourDT = DecisionTree(max_depth=10, min_samples_leaf=30)
-    skDT = DecisionTreeClassifier()
+    custom_decision_tree = DecisionTree(max_depth=10, min_samples_leaf=30)
+    custom_random_forest = RandomForest()
+    sklearn_decision_tree = DecisionTreeClassifier()
+    sklearn_random_forest = RandomForestClassifier()
 
-    ourRF = RandomForest()
-    skRF = RandomForestClassifier()
-
-    classifiers = {'ourDT': ourDT,
-                   'ourRF': ourRF,
-                   'skDT': skDT,
-                   'skRF': skRF}
+    classifiers = {'custom_decision_tree': custom_decision_tree,
+                   'custom_random_forest': custom_random_forest,
+                   'sklearn_decision_tree': sklearn_decision_tree,
+                   'sklearn_random_forest': sklearn_random_forest}
 
     folds = 2
-    printed = False
     kf = cross_validation.KFold(set.shape[0], n_folds=folds)
     predictions = {}
-    for k, v in classifiers.items():
+    for label, classifier in classifiers.items():
         result = list()
         prob = list()
 
@@ -42,7 +40,7 @@ def experiment():
         avg_train_time = 0.0
         avg_test_time = 0.0
 
-        print(k)
+        print(label)
         for train, test in kf:
             train_set = set[train]
             train_class = classSet[train]
@@ -50,25 +48,26 @@ def experiment():
             test_class = classSet[test]
 
             start = time()
-            v.fit(train_set, train_class.ravel())
+            classifier.fit(train_set, train_class.ravel())
 
-            if k == 'ourDT' and printed == False:
-                v.printTree() # Prints a tree
-                printed = True
+            # If the current classifier is our own decision tree,
+            # print a visualization of it in the console.
+            if label == 'custom_decision_tree':
+                classifier.printTree()
 
             avg_train_time += time() - start
 
             start = time()
-            p = v.predict(test_set)
-            prob.append(v.predict_proba(test_set))
+            p = classifier.predict(test_set)
+            prob.append(classifier.predict_proba(test_set))
             avg_test_time += time() - start
 
             result.append(HelpFunctions.convert_pred_and_class_sets_to_values(test_class, p))
 
-        predictions[k] = list()
+        predictions[label] = list()
         for r1 in range(len(result)):
             avg_accuracy += metrics.accuracy_score(result[r1][0], result[r1][1])
-            predictions[k].append(metrics.accuracy_score(result[r1][0], result[r1][1]))
+            predictions[label].append(metrics.accuracy_score(result[r1][0], result[r1][1]))
             avg_precision += metrics.precision_score(result[r1][0], result[r1][1])
             avg_recall += metrics.recall_score(result[r1][0], result[r1][1])
 
