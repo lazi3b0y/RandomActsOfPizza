@@ -2,7 +2,7 @@ import scipy.stats
 from numpy import array_str
 from collections import Counter
 from utils.parse import Parse
-from prediction_classifiers.decision_tree import DecisionTree
+from classifiers.decision_tree import DecisionTree
 
 __author__ = 'Simon & Oskar'
 
