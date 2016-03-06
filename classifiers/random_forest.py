@@ -5,6 +5,7 @@ from collections import Counter
 
 __author__ = 'Simon & Oskar'
 
+# TODO: Rename variables, restructure code(?), comment code
 class RandomForest:
     def __init__(self, max_depth=None, min_samples_leaf=1, n_estimators=10, sample_size=200):
         self.criterion = "gini"

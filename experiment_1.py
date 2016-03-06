@@ -32,10 +32,12 @@ def experiment():
     folds = 2
     kf = cross_validation.KFold(feature_set.shape[0], n_folds=folds)
     predictions = {}
+    # TODO: Restructure the code somewhat to make it look less like JJJ's. Ayyyy lmao Kappa 123
     for label, classifier in classifiers.items():
         result = list()
         prob = list()
 
+        # TODO: Obvious fuckin' plagiarism shit, rename pl0x or find a way to remove the need to initialize them.
         avg_accuracy = 0.0
         avg_precision = 0.0
         avg_recall = 0.0
@@ -65,6 +67,7 @@ def experiment():
             prob.append(classifier.predict_proba(test_feature_set))
             avg_test_time += time() - start
 
+            # TODO: change this section down to the result.append() function call. Rename variables etc.
             a = test_class_set.ravel()
             b = prediction_result.ravel()
 
@@ -81,9 +84,9 @@ def experiment():
             b = b.astype('float')
 
 
-
             result.append([a, b])
 
+        # TODO: In need of some refactoring, names and structure needs to be redone.
         predictions[label] = list()
         for r1 in range(len(result)):
             avg_accuracy += metrics.accuracy_score(result[r1][0], result[r1][1])
@@ -103,6 +106,7 @@ def experiment():
                 fpr, tpr, thresholds = metrics.roc_curve(result[r1][0], maxP1)
                 avg_auc += metrics.auc(fpr, tpr)
 
+        # TODO: Move this crap to the print.py module.
         print("Average over {} folds".format(folds))
         print('Accuracy: {0:.3f}'.format(avg_accuracy / float(len(result))))
         print("Precision: {0:.3f}".format(avg_precision / float(len(result))))
@@ -112,6 +116,7 @@ def experiment():
         print('Test time: {}'.format((avg_test_time / float(len(result)))))
         print("--------------")
 
+    # TODO: This needs to be moved as well.
     print("Wilcoxon DT: ")
     print(wilcoxon(predictions['ourDT'], predictions['skDT']))
     print("Wilcoxon RF: ")
