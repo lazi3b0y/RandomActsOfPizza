@@ -107,6 +107,7 @@ class DecisionTree:
                     break
         return s
 
+    #SDFJÖXDFGLKDFLKJHLJKÖXDFHLKJDFHLÖKJCHVFLÖKJCBVNÖLKBVCX
     #def gini(self, x, y):
     #    u = unique(y)
     #    result = 0
