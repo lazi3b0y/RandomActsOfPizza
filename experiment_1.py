@@ -2,7 +2,7 @@ from scipy.stats import wilcoxon
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import cross_validation, metrics
-from numpy import unique, array, concatenate
+from numpy import unique, array, concatenate, asfarray
 from time import time
 from classifiers.decision_tree import DecisionTree
 from classifiers.random_forest import RandomForest
@@ -15,19 +15,11 @@ def experiment():
     json()
     csv_data = csv('resources/raop.csv')
 
-    class_set = csv_data['received_pizza']
-    feature_set = csv_data[[
-        'acc_age',
-        'days_since_first_roap_post',
-        'n_posts_on_roap',
-        'n_posts_total',
-        'n_comments_total',
-        'n_comments_in_roap',
-        'n_subreddits',
-        'upvotes_minus_downvotes',
-        'time_stamp',
-    ]]
-    feature_set = feature_set.ix[1:]
+    class_set = csv_data.as_matrix(columns = csv_data.columns[-1:])
+    class_set = asfarray(class_set)
+
+    feature_set = csv_data.as_matrix(columns = csv_data.columns[1:])
+    feature_set = asfarray(feature_set)
     print("Random guessing value: {}".format((1.0 / float(unique(class_set).shape[0]))))
 
     classifiers = {
@@ -64,7 +56,7 @@ def experiment():
             # If the current classifier is our own decision tree,
             # print a visualization of it in the console.
             if label == 'custom_decision_tree':
-                classifier.printTree()
+                classifier.print()
 
             avg_train_time += time() - start
 
@@ -73,26 +65,24 @@ def experiment():
             prob.append(classifier.predict_proba(test_feature_set))
             avg_test_time += time() - start
 
+            a = test_class_set.ravel()
+            b = prediction_result.ravel()
 
-
-            trueSet = array([c[0] for c in test_class_set])
-            predSet = array([p for p in prediction_result])
-
-            u = unique(concatenate((trueSet, predSet)))
+            u = unique(concatenate((a, b)))
 
             for i in range(test_class_set.shape[0]):
                 for j in range(u.shape[0]):
                     if test_class_set[i] == u[j]:
-                        trueSet[i] = j
+                        a[i] = j
                     if prediction_result[i] == u[j]:
-                        predSet[i] = j
+                        b[i] = j
 
-            trueSet = trueSet.astype('float')
-            predSet = predSet.astype('float')
+            a = a.astype('float')
+            b = b.astype('float')
 
 
 
-            result.append(trueSet, predSet)
+            result.append([a, b])
 
         predictions[label] = list()
         for r1 in range(len(result)):

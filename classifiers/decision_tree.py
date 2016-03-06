@@ -1,6 +1,6 @@
 from numpy import unique, array, zeros, argmin, delete, arange
 from collections import Counter
-from utils.print import Print
+from utils import print
 import math
 
 __author__ = 'Simon & Oskar'
@@ -13,26 +13,29 @@ class DecisionTree:
         self.min_samples_leaf = min_samples_leaf # minimum leaf size
         self.laplace = laplace # laplace correction for probability estimation
 
+        self.n_classes = None
         self.value = None
         self.left_child = None
         self.right_child = None
 
-    def fit(self, x, y): # train model
-        self.n_classes = unique(y)
+    def fit(self, x, y, cur_max_depth = None): # train model
+        if self.n_classes is None:
+            self.n_classes = unique(y)
+        if cur_max_depth is None:
+            cur_max_depth = self.max_depth
 
-        cur_max_depth = self.max_depth
-        if self.max_features is None:
-            self.max_features = x.size
-        elif self.max_features > x.size:
-            self.max_features = x.size
+        if self.max_feature is None:
+            self.max_feature = x.size
+        elif self.max_feature > x.size:
+            self.max_feature = x.size
         else:
-            self.max_features = self.max_features
+            self.max_feature = self.max_feature
 
-        if self.max_depth is not None and self.max_depth <= 0:
+        if cur_max_depth is not None and cur_max_depth <= 0:
             return y
 
         if self.max_depth is not None:
-            cur_max_depth = self.max_depth - 1
+            cur_max_depth = cur_max_depth - 1
 
         if len(x) <= self.min_samples_leaf:
             return y
@@ -51,15 +54,15 @@ class DecisionTree:
         right_split = x[:, self.value[0]] > self.value[1]
         l = x[left_split]
         r = x[right_split]
-        self.left_child = self.fit(l, y[left_split], cur_max_depth, self.min_samples_leaf, self.max_features)
-        self.right_child = self.fit(r, y[right_split], cur_max_depth, self.min_samples_leaf, self.max_features)
+        self.left_child = self.fit(l, y[left_split], cur_max_depth)
+        self.right_child = self.fit(r, y[right_split], cur_max_depth)
 
         return self
 
     def predict(self, x): # classify objects
         result = list()
         for row in x:
-            current_node = self.tree
+            current_node = self
             while True:
                 if type(current_node) is type(self):
                     if row[current_node.value[0]] <= current_node.value[1]:
@@ -75,7 +78,7 @@ class DecisionTree:
     def predict_proba(self, x): # class probability estimation
         result = list()
         for row in x:
-            current_node = self.tree
+            current_node = self
             while(True):
                 if type(current_node) is type(self):
                     if row[current_node.value[0]] <= current_node.value[1]:
@@ -103,7 +106,7 @@ class DecisionTree:
                 rightNodes = feature_data[feature_data > splitIndex]
                 if leftNodes.size == 0 or rightNodes.size == 0: continue
                 s.append([i, splitIndex, self.ginisplit(leftNodes, rightNodes, (classes[:leftNodes.size], classes[leftNodes.size:]))])
-                if len(s) >= self.max_features:
+                if len(s) >= self.max_feature:
                     break
         return s
 
@@ -132,4 +135,4 @@ class DecisionTree:
 
     def print(self): # visualize tree (console)
         depth = 0
-        Print.tree(self, depth)
+        # print.tree(self, depth)
