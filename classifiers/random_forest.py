@@ -48,7 +48,7 @@ class RandomForest:
             result = zeros((self.n_estimators, 1))
             result = result.astype(self.classType)
             for i in range(self.n_estimators):
-                result[i] = self.trees[i].predict(array([x[row]]))
+                result[i] = self.trees[i].predict(x[row])
             cn = [r[0] for r in result]
             c = Counter(cn).most_common(unique(cn).size)
             finalResult[row] = self.pick_result(c)
