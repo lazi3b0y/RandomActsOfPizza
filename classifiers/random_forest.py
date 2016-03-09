@@ -1,6 +1,6 @@
 from numpy import unique, zeros, array
 from random import randrange
-from classifiers.decision_tree import DecisionTree
+from classifiers.decision_tree import BinaryTreeClassifier
 from collections import Counter
 
 __author__ = 'Simon & Oskar'
@@ -37,7 +37,7 @@ class RandomForest:
 
         self.trees = list()
         for i in range(self.n_estimators):
-            tree = DecisionTree(self.max_features, self.max_depth, self.min_samples_leaf, self.laplace)
+            tree = BinaryTreeClassifier(self.max_features, self.max_depth, self.min_samples_leaf, self.laplace)
             tree.fit(random_samples[i], random_samples_class[i])
             self.trees.append(tree)
 
