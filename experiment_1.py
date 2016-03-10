@@ -4,7 +4,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn import cross_validation, metrics
 from numpy import unique, array, concatenate, asfarray
 from time import time
-from classifiers.decision_tree import BinaryTreeClassifier
+from classifiers.decision_tree import DecisionTree
 from classifiers.random_forest import RandomForest
 from utils.parse import csv, json
 
@@ -23,7 +23,7 @@ def experiment():
     print("Random guessing value: {}".format((1.0 / float(unique(class_set).shape[0]))))
 
     classifiers = {
-        'custom_decision_tree': BinaryTreeClassifier(max_depth=10, min_samples_leaf=30),
+        'custom_decision_tree': DecisionTree(max_depth=10, min_samples_leaf=30),
         'custom_random_forest': RandomForest(),
         'sklearn_decision_tree': DecisionTreeClassifier(),
         'sklearn_random_forest': RandomForestClassifier(),

@@ -45,11 +45,11 @@ class DecisionTree:
         rightSplit = x[:, self.value[0]] > self.value[1]
         l = x[leftSplit]
         r = x[rightSplit]
-        left_child_tree = BinaryTreeClassifier(min_samples_leaf = self.min_samples_leaf,
+        left_child_tree = DecisionTree(min_samples_leaf = self.min_samples_leaf,
                                           max_depth = self.max_depth - 1 if self.max_depth != -1 else self.max_depth,
                                           max_features = self.max_features)
 
-        right_child_tree = BinaryTreeClassifier(min_samples_leaf = self.min_samples_leaf,
+        right_child_tree = DecisionTree(min_samples_leaf = self.min_samples_leaf,
                                           max_depth = self.max_depth - 1 if self.max_depth != -1 else self.max_depth,
                                           max_features = self.max_features)
 
@@ -63,7 +63,7 @@ class DecisionTree:
         for row in x:
             current_node = self
             while True:
-                if isinstance(current_node, BinaryTreeClassifier):
+                if isinstance(current_node, DecisionTree):
                     if row[current_node.value[0]] <= current_node.value[1]:
                         current_node = current_node.leftChild
                     else:
@@ -79,7 +79,7 @@ class DecisionTree:
         for row in x:
             current_node = self
             while True:
-                if isinstance(current_node, BinaryTreeClassifier):
+                if isinstance(current_node, DecisionTree):
                     if row[current_node.value[0]] <= current_node.value[1]:
                         current_node = current_node.leftChild
                     else:
