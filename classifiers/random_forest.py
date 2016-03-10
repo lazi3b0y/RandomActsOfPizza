@@ -1,6 +1,6 @@
 import numpy
 from random import randrange
-from classifiers.decision_tree import BinaryTreeClassifier
+from classifiers.decision_tree import DecisionTree
 from collections import Counter
 
 __author__ = 'Simon & Oskar'
