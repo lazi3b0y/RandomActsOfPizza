@@ -1,13 +1,11 @@
-from pandas import read_csv
-from numpy import *
+from numpy import unique, argmin, array, zeros, delete, arange
 from collections import Counter
-from sklearn import tree
-import math as math
-from scipy.stats import laplace
+from utils.print import tree
+import math
 
 
 class BinaryTreeClassifier:
-    def __init__(self, max_features = None, max_depth = None, min_samples_leaf = 1, laplace = 0):
+    def __init__(self, max_features = None, max_depth = None, min_samples_leaf=1, laplace=0):
         self.max_features = max_features
         self.max_depth = max_depth
         self.min_samples_leaf = min_samples_leaf
@@ -16,38 +14,21 @@ class BinaryTreeClassifier:
         self.value = None
         self.leftChild = None
         self.rightChild = None
+        self.n_classes = None
 
     # x = rows of post stats
     # y = set of classes, i.e. if a post recieved a pizza or not.
-    def fit(self, x, y, cur_max_depth = None):
-        try:
-            if self.n_classes is None:
-                self.n_classes = unique(y)
-        except AttributeError:
+    def fit(self, x, y):
+        if self.n_classes is None:
             self.n_classes = unique(y)
-        # self.tree = DecisionTree().buildTree(x,y, self.max_depth, self.min_samples_leaf, self.max_features)
 
+        if self.max_depth == None:
+            self.max_depth = -1
 
-
-        if cur_max_depth is None:
-            max_depth = self.max_depth
-        else:
-            max_depth = cur_max_depth
-
-        # if self.max_features is None:
-        #     self.max_features = x.size
-        # elif self.max_features > x.size:
-        #     self.max_features = x.size
-        # else:
-        #     self.max_features = self.max_features
-
-        if(cur_max_depth is not None and cur_max_depth <= 0):
+        if self.max_depth == 0:
             return y
 
-        if(cur_max_depth is not None):
-            max_depth = cur_max_depth - 1
-
-        if(len(x) <= self.min_samples_leaf):
+        if len(x) <= self.min_samples_leaf:
             return y
 
         if unique(y).size == 1:
@@ -55,7 +36,7 @@ class BinaryTreeClassifier:
 
         splits = array(self.split(x, y))
 
-        if(splits.size <= 0):
+        if splits.size <= 0:
             return y
 
         i = argmin(splits[:, 2])
@@ -64,10 +45,20 @@ class BinaryTreeClassifier:
         rightSplit = x[:, self.value[0]] > self.value[1]
         l = x[leftSplit]
         r = x[rightSplit]
-        self.leftChild = self.fit(l, y[leftSplit], max_depth)
-        self.rightChild = self.fit(r, y[rightSplit], max_depth)
+        left_child_tree = BinaryTreeClassifier(min_samples_leaf = self.min_samples_leaf,
+                                          max_depth = self.max_depth - 1 if self.max_depth != -1 else self.max_depth,
+                                          max_features = self.max_features)
 
-    def predict(self, x): # classify objects
+        right_child_tree = BinaryTreeClassifier(min_samples_leaf = self.min_samples_leaf,
+                                          max_depth = self.max_depth - 1 if self.max_depth != -1 else self.max_depth,
+                                          max_features = self.max_features)
+
+        self.leftChild = left_child_tree.fit(l, y[leftSplit])
+        self.rightChild = right_child_tree.fit(r, y[rightSplit])
+
+        return self
+
+    def predict(self, x):  # classify objects
         result = list()
         for row in x:
             current_node = self
@@ -77,15 +68,13 @@ class BinaryTreeClassifier:
                         current_node = current_node.leftChild
                     else:
                         current_node = current_node.rightChild
-                elif current_node is not None:
+                else:
                     most_common_element = Counter(current_node.tolist()).most_common(1)
                     result.append(most_common_element[0][0])
                     break
-                else:
-                    break
         return array(result)
 
-    def predict_proba(self, x): # class probability estimation
+    def predict_proba(self, x):  # class probability estimation
         result = list()
         for row in x:
             current_node = self
@@ -107,25 +96,23 @@ class BinaryTreeClassifier:
                     break
         return array(result)
 
-    def print(self): # visualize tree (console)
+    def print(self):  # Visualize Tree (console)
         depth = 0
-        print.tree(self, depth)
+        tree(self, depth)
 
-
-
-
-
-    def split(self, features, classes):
+    def split(self, x, y):
         s = list()
-        for i in range(features.shape[1]):
-            feature_data = features[:, i]
+        for i in range(x.shape[1]):
+            feature_data = x[:, i]
             unique_data = unique(feature_data)
             unique_data = delete(unique_data, arange(0, unique_data.size, 1.2))
             for splitIndex in unique_data:
                 leftNodes = feature_data[feature_data <= splitIndex]
                 rightNodes = feature_data[feature_data > splitIndex]
-                if leftNodes.size == 0 or rightNodes.size == 0: continue
-                s.append([i, splitIndex, self.ginisplit(leftNodes, rightNodes, (classes[:leftNodes.size], classes[leftNodes.size:]))])
+                if leftNodes.size == 0 or rightNodes.size == 0:
+                    continue
+                s.append(
+                    [i, splitIndex, self.ginisplit(leftNodes, rightNodes, (y[:leftNodes.size], y[leftNodes.size:]))])
                 if self.max_features is None or len(s) >= self.max_features:
                     break
         return s
@@ -138,12 +125,13 @@ class BinaryTreeClassifier:
         return 1.0 - result
 
     def probability(self, a, b):
-        if a+b == 0: return 0
-        return float(a)/float((a+b))
+        if a + b == 0: return 0
+        return float(a) / float((a + b))
 
     def ginisplit(self, leftNodes, rightNodes, y):
         precords = float(leftNodes.size + rightNodes.size)
-        return (float(leftNodes.size)/precords) * self.gini(leftNodes, y[0]) + (float(rightNodes.size) / precords) * self.gini(rightNodes, y[1])
+        return (float(leftNodes.size) / precords) * self.gini(leftNodes, y[0]) + (float(
+            rightNodes.size) / precords) * self.gini(rightNodes, y[1])
 
     def laplace(self, x):
         result = []
@@ -152,10 +140,6 @@ class BinaryTreeClassifier:
             t = x[x == c]
             result.append(float(t.shape[0] + 1) / float(x.shape[0] + unique_classes.shape[0]))
         return result
-
-
-
-
 
 # class DecisionTree:
 #

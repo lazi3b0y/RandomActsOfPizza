@@ -1,4 +1,4 @@
-from numpy import unique, zeros, array
+import numpy
 from random import randrange
 from classifiers.decision_tree import BinaryTreeClassifier
 from collections import Counter
@@ -19,15 +19,15 @@ class RandomForest:
 
     def fit(self, x, y):
         self.classType = y.dtype
-        self.n_classes = unique(y)
+        self.n_classes = numpy.unique(y)
         if self.sample_size == None:
             self.sample_size = x.shape[0] / self.n_estimators
 
-        random_samples = zeros((self.n_estimators, self.sample_size, x.shape[1]), 'float64')
-        random_samples_class = zeros((self.n_estimators, self.sample_size), self.classType)
+        random_samples = numpy.zeros((self.n_estimators, self.sample_size, x.shape[1]), 'float64')
+        random_samples_class = numpy.zeros((self.n_estimators, self.sample_size), self.classType)
         for i in range(self.n_estimators):
-            temp = zeros((self.sample_size, x.shape[1]), 'float64')
-            temp_class = zeros((self.sample_size), self.classType)
+            temp = numpy.zeros((self.sample_size, x.shape[1]), 'float64')
+            temp_class = numpy.zeros((self.sample_size), self.classType)
             for j in range(self.sample_size):
                 r = randrange(0,x.shape[0])
                 temp[j] = x[r]
@@ -43,24 +43,24 @@ class RandomForest:
 
 
     def predict(self, x):
-        finalResult = zeros((x.shape[0]), self.classType)
+        finalResult = numpy.zeros((x.shape[0]), self.classType)
         for row in range(x.shape[0]):
-            result = zeros((self.n_estimators, 1))
+            result = numpy.zeros((self.n_estimators, 1))
             result = result.astype(self.classType)
             for i in range(self.n_estimators):
-                result[i] = self.trees[i].predict(x[row])
+                result[i] = self.trees[i].predict(numpy.array([x[row]]))
             cn = [r[0] for r in result]
-            c = Counter(cn).most_common(unique(cn).size)
+            c = Counter(cn).most_common(numpy.unique(cn).size)
             finalResult[row] = self.pick_result(c)
 
         return finalResult
 
     def predict_proba(self, x):
-        finalResult = zeros((x.shape[0], len(self.n_classes)), 'float')
+        finalResult = numpy.zeros((x.shape[0], len(self.n_classes)), 'float')
         for row in range(x.shape[0]):
-            result = zeros((self.n_estimators, len(self.n_classes)), 'float')
+            result = numpy.zeros((self.n_estimators, len(self.n_classes)), 'float')
             for i in range(self.n_estimators):
-                result[i] = self.trees[i].predict_proba(array([x[row]]))
+                result[i] = self.trees[i].predict_proba(numpy.array([x[row]]))
             result.astype('float')
             for r in result:
                 for i in range(finalResult.shape[1]):
