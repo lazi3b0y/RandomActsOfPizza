@@ -12,8 +12,8 @@ class DecisionTree:
         self.laplace = laplace
 
         self.value = None
-        self.leftChild = None
-        self.rightChild = None
+        self.left_child = None
+        self.right_child = None
         self.n_classes = None
 
     # x = rows of post stats
@@ -41,10 +41,10 @@ class DecisionTree:
 
         i = argmin(splits[:, 2])
         self.value = splits[i]
-        leftSplit = x[:, self.value[0]] <= self.value[1]
-        rightSplit = x[:, self.value[0]] > self.value[1]
-        l = x[leftSplit]
-        r = x[rightSplit]
+        left_split = x[:, self.value[0]] <= self.value[1]
+        right_split = x[:, self.value[0]] > self.value[1]
+        l = x[left_split]
+        r = x[right_split]
         left_child_tree = DecisionTree(min_samples_leaf = self.min_samples_leaf,
                                           max_depth = self.max_depth - 1 if self.max_depth != -1 else self.max_depth,
                                           max_features = self.max_features)
@@ -53,8 +53,8 @@ class DecisionTree:
                                           max_depth = self.max_depth - 1 if self.max_depth != -1 else self.max_depth,
                                           max_features = self.max_features)
 
-        self.leftChild = left_child_tree.fit(l, y[leftSplit])
-        self.rightChild = right_child_tree.fit(r, y[rightSplit])
+        self.left_child = left_child_tree.fit(l, y[left_split])
+        self.right_child = right_child_tree.fit(r, y[right_split])
 
         return self
 
@@ -65,9 +65,9 @@ class DecisionTree:
             while True:
                 if isinstance(current_node, DecisionTree):
                     if row[current_node.value[0]] <= current_node.value[1]:
-                        current_node = current_node.leftChild
+                        current_node = current_node.left_child
                     else:
-                        current_node = current_node.rightChild
+                        current_node = current_node.right_child
                 else:
                     most_common_element = Counter(current_node.tolist()).most_common(1)
                     result.append(most_common_element[0][0])
@@ -81,9 +81,9 @@ class DecisionTree:
             while True:
                 if isinstance(current_node, DecisionTree):
                     if row[current_node.value[0]] <= current_node.value[1]:
-                        current_node = current_node.leftChild
+                        current_node = current_node.left_child
                     else:
-                        current_node = current_node.rightChild
+                        current_node = current_node.right_child
                 elif current_node is None:
                     break
                 else:
@@ -107,33 +107,35 @@ class DecisionTree:
             unique_data = unique(feature_data)
             unique_data = delete(unique_data, arange(0, unique_data.size, 1.2))
             for splitIndex in unique_data:
-                leftNodes = feature_data[feature_data <= splitIndex]
-                rightNodes = feature_data[feature_data > splitIndex]
-                if leftNodes.size == 0 or rightNodes.size == 0:
+                left_nodes = feature_data[feature_data <= splitIndex]
+                right_nodes = feature_data[feature_data > splitIndex]
+                if left_nodes.size == 0 or right_nodes.size == 0:
                     continue
                 s.append(
-                    [i, splitIndex, self.ginisplit(leftNodes, rightNodes, (y[:leftNodes.size], y[leftNodes.size:]))])
+                    [i, splitIndex, self.ginisplit(left_nodes, right_nodes, (y[:left_nodes.size], y[left_nodes.size:]))])
                 if self.max_features is None or len(s) >= self.max_features:
                     break
         return s
 
     def gini(self, x, y):
-        unique_value = unique(y)
+        unique_values = unique(y)
         result = 0
-        for value in unique_value:
+        for value in unique_values:
             result += math.pow(self.probability((y[y == value]).shape[0], (y[y != value]).shape[0]), 2)
         return 1.0 - result
 
-    def probability(self, a, b):
+    @staticmethod
+    def probability(a, b):
         if a + b == 0: return 0
         return float(a) / float((a + b))
 
-    def ginisplit(self, leftNodes, rightNodes, y):
-        precords = float(leftNodes.size + rightNodes.size)
-        return (float(leftNodes.size) / precords) * self.gini(leftNodes, y[0]) + (float(
-            rightNodes.size) / precords) * self.gini(rightNodes, y[1])
+    def ginisplit(self, left_nodes, right_nodes, y):
+        precords = float(left_nodes.size + right_nodes.size)
+        return (float(left_nodes.size) / precords) * self.gini(left_nodes, y[0]) + (float(
+            right_nodes.size) / precords) * self.gini(right_nodes, y[1])
 
-    def laplace(self, x):
+    @staticmethod
+    def laplace(x):
         result = []
         unique_classes = unique(x)
         for c in unique_classes:
