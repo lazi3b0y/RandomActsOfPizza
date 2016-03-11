@@ -9,8 +9,6 @@ from sklearn import metrics
 from sklearn import cross_validation
 from time import time
 
-from scipy.stats import wilcoxon
-
 import numpy
 
 def main():
