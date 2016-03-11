@@ -1,4 +1,3 @@
-from scipy.stats import wilcoxon
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import cross_validation, metrics
@@ -6,14 +5,16 @@ from numpy import unique, array, concatenate, asfarray
 from time import time
 from classifiers.decision_tree import DecisionTree
 from classifiers.random_forest import RandomForest
-from utils.parse import csv, json
+from utils.parse import parse_csv, parse_json
+from utils.print import print_statistics, print_wilcoxon
 
 __author__ = 'Simon & Oskar'
 
+
 # TODO: Restructure the code somewhat to make it look less like JJJ's. Ayyyy lmao Kappa 123
 def experiment():
-    json()
-    csv_data = csv('resources/raop.csv')
+    parse_json('resources/train.json', 'resources/raop.csv')
+    csv_data = parse_csv('resources/raop.csv')
 
     class_set = csv_data.as_matrix(columns = csv_data.columns[-1:])
     class_set = asfarray(class_set)
@@ -56,8 +57,7 @@ def experiment():
 
             # If the current classifier is our own decision tree,
             # print a visualization of it in the console.
-            # if label == 'custom_decision_tree':
-                # classifier.print()
+            # if label == 'custom_decision_tree': classifier.print()
 
             avg_train_time += time() - start
 
@@ -82,7 +82,6 @@ def experiment():
             a = a.astype('float')
             b = b.astype('float')
 
-
             result.append([a, b])
 
         # TODO: In need of some refactoring, names and structure needs to be redone.
@@ -106,20 +105,10 @@ def experiment():
                 avg_auc += metrics.auc(fpr, tpr)
 
         # TODO: Move this crap to the print.py module.
-        print("Average over {} folds".format(folds))
-        print('Accuracy: {0:.3f}'.format(avg_accuracy / float(len(result))))
-        print("Precision: {0:.3f}".format(avg_precision / float(len(result))))
-        print("Recall: {0:.3f}".format(avg_recall / float(len(result))))
-        print("Auc: {0:.3f}".format(avg_auc / float(len(result))))
-        print('Training time: {}'.format((avg_train_time / float(len(result)))))
-        print('Test time: {}'.format((avg_test_time / float(len(result)))))
-        print("--------------")
+        print_statistics(folds, avg_accuracy, avg_precision, avg_recall, avg_auc, avg_train_time, avg_test_time, result)
 
     # TODO: This needs to be moved as well.
-    print("Wilcoxon Result for Decision Tree: ")
-    print(wilcoxon(predictions['custom_decision_tree'], predictions['sklearn_decision_tree']))
-    print("Wilcoxon Result for Random Forest: ")
-    print(wilcoxon(predictions['custom_random_forest'], predictions['sklearn_random_forest']))
+    print_wilcoxon(predictions)
 
 
 if __name__ == "__main__":

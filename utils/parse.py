@@ -5,7 +5,7 @@ import os
 __author__ = 'Simon & Oskar'
 
 
-def json():
+def parse_json(json_path, csv_save_path):
     fields = ['requester_account_age_in_days_at_request',
               'requester_days_since_first_post_on_raop_at_request',
               'requester_number_of_posts_on_raop_at_request',
@@ -29,13 +29,13 @@ def json():
                 'received_pizza']
 
     script_path = os.path.dirname(__file__)
-    json_file_path = os.path.join(script_path, 'resources/train.json')
+    json_file_path = os.path.join(script_path, json_path)
     json_file = open(json_file_path, 'r')
     json_data = loads(json_file.read())
     json_file.close()
 
     script_path = os.path.dirname(__file__)
-    csv_file_path = os.path.join(script_path, 'resources/raop.csv')
+    csv_file_path = os.path.join(script_path, csv_save_path)
     out_file = open(csv_file_path, 'w+')
     out_file.write('{}\n'.format(','.join(features)))
 
@@ -44,7 +44,7 @@ def json():
         out_file.write('{}\n'.format(row))
 
 
-def csv(relative_file_path):
+def parse_csv(relative_file_path):
     script_path = os.path.dirname(__file__)
     file_path = os.path.join(script_path, relative_file_path)
     csv_data = read_csv(file_path)

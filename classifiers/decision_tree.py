@@ -1,6 +1,6 @@
 from numpy import unique, argmin, array, zeros, delete, arange
 from collections import Counter
-from utils.print import tree
+from utils.print import print_tree
 import math
 
 
@@ -98,7 +98,7 @@ class DecisionTree:
 
     def print(self):  # Visualize Tree (console)
         depth = 0
-        tree(self, depth)
+        print_tree(self, depth)
 
     def split(self, x, y):
         s = list()
