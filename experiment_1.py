@@ -91,11 +91,11 @@ def main():
 
             uniq_values = numpy.unique(result[row][0])
             pred_pbty_sub_set = numpy.array(pred_pbty[row])
-            maximized_pbty_sub_set = numpy.array([max(result_pair) for result_pair in pred_pbty_sub_set])
+            maximized_pbty_sub_set = numpy.array([max(pbty_pair) for pbty_pair in pred_pbty_sub_set])
             if len(uniq_values) > 2:
                 for i in uniq_values:
-                    fpr, tpr, thresholds = metrics.roc_curve(result[row][0], maximized_pbty_sub_set, pos_label=int(i))
-                    avg_auc += metrics.auc(fpr, tpr)
+                    false_pos_rates, true_pos_rates, thresholds = metrics.roc_curve(y_true = result[row][0], y_score = maximized_pbty_sub_set, pos_label = int(i))
+                    avg_auc += metrics.auc(false_pos_rates, true_pos_rates)
                 avg_auc /= uniq_values.size / 2.0
             else:
                 false_pos_rates, true_pos_rates, thresholds = metrics.roc_curve(result[row][0], maximized_pbty_sub_set)
