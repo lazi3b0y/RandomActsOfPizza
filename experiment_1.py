@@ -23,19 +23,20 @@ def main():
 
     print("Random guessing value: {}".format((1.0 / float(numpy.unique(class_set).shape[0]))))
 
-    custom_decision_tree = DecisionTree(max_depth=10, min_samples_leaf=30)
-    sklearn_decision_tree = DecisionTreeClassifier(max_depth=10, min_samples_leaf=30, max_features=None)
+    custom_decision_tree = DecisionTree(max_depth = 10, min_samples_leaf = 30)
+    sklearn_decision_tree = DecisionTreeClassifier(max_depth = 10, min_samples_leaf = 30, max_features = None)
 
-    custom_random_forest = RandomForest(max_depth=10, min_samples_leaf=30)
-    sklearn_random_forest = RandomForestClassifier(max_depth=10, min_samples_leaf=30, max_features=None)
+    custom_random_forest = RandomForest(max_depth = 10, min_samples_leaf = 30)
+    sklearn_random_forest = RandomForestClassifier(max_depth = 10, min_samples_leaf = 30, max_features = None)
 
-    classifiers = {}
-    classifiers["custom_decision_tree"] = custom_decision_tree
-    classifiers["custom_random_forest"] = custom_random_forest
-    classifiers["sklearn_decision_tree"] = sklearn_decision_tree
-    classifiers["sklearn_random_forest"] = sklearn_random_forest
+    classifiers = {
+        "custom_decision_tree": custom_decision_tree,
+        "custom_random_forest": custom_random_forest,
+        "sklearn_decision_tree": sklearn_decision_tree,
+        "sklearn_random_forest": sklearn_random_forest
+    }
 
-    kf = cross_validation.KFold(n=n_elements, n_folds=n_folds)
+    kf = cross_validation.KFold(n = n_elements, n_folds = n_folds)
     predictions = {}
     for key, classifier in classifiers.items():
         result = list()
@@ -94,12 +95,12 @@ def main():
             maximized_pbty_sub_set = numpy.array([max(pbty_pair) for pbty_pair in pred_pbty_sub_set])
             if len(uniq_values) > 2:
                 for i in uniq_values:
-                    false_pos_rates, true_pos_rates, thresholds = metrics.roc_curve(y_true = result[row][0], y_score = maximized_pbty_sub_set, pos_label = int(i))
-                    avg_auc += metrics.auc(false_pos_rates, true_pos_rates)
+                    false_posi_rates, true_posi_rates, thresholds = metrics.roc_curve(y_true = result[row][0], y_score = maximized_pbty_sub_set, pos_label = int(i))
+                    avg_auc += metrics.auc(false_posi_rates, true_posi_rates)
                 avg_auc /= uniq_values.size / 2.0
             else:
-                false_pos_rates, true_pos_rates, thresholds = metrics.roc_curve(result[row][0], maximized_pbty_sub_set)
-                avg_auc += metrics.auc(false_pos_rates, true_pos_rates)
+                false_posi_rates, true_posi_rates, thresholds = metrics.roc_curve(result[row][0], maximized_pbty_sub_set)
+                avg_auc += metrics.auc(false_posi_rates, true_posi_rates)
         print_statistics(n_folds, avg_accuracy, avg_precision, avg_recall, avg_auc, avg_train_time, avg_test_time, result)
 
     print_wilcoxon(predictions)
