@@ -37,7 +37,7 @@ class RandomForest:
 
         self.trees = list()
         for i in range(self.n_estimators):
-            tree = DecisionTree(self.max_features, self.max_depth, self.min_samples_leaf, self.laplace)
+            tree = DecisionTree(max_features = self.max_features, max_depth = self.max_depth, min_samples_leaf = self.min_samples_leaf, laplace = self.laplace)
             tree.fit(random_samples[i], random_samples_class[i])
             self.trees.append(tree)
 

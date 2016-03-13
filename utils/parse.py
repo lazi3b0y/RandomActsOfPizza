@@ -1,5 +1,6 @@
-from json import loads
-from pandas import read_csv
+import json
+import pandas
+import numpy
 import os
 
 __author__ = 'Simon & Oskar'
@@ -31,7 +32,7 @@ def parse_json(json_path, csv_save_path):
     script_path = os.path.dirname(__file__)
     json_file_path = os.path.join(script_path, json_path)
     json_file = open(json_file_path, 'r')
-    json_data = loads(json_file.read())
+    json_data = json.loads(json_file.read())
     json_file.close()
 
     script_path = os.path.dirname(__file__)
@@ -47,5 +48,12 @@ def parse_json(json_path, csv_save_path):
 def parse_csv(relative_file_path):
     script_path = os.path.dirname(__file__)
     file_path = os.path.join(script_path, relative_file_path)
-    csv_data = read_csv(file_path)
-    return csv_data
+    csv_data = pandas.read_csv(file_path)
+
+    class_set = csv_data.as_matrix(columns = csv_data.columns[-1:])
+    class_set = numpy.array(class_set).astype('float')
+
+    feature_set = csv_data.as_matrix(columns = csv_data.columns[1:])
+    feature_set = numpy.array(feature_set).astype('float')
+
+    return class_set, feature_set
