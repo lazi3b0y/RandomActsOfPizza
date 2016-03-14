@@ -105,13 +105,13 @@ class DecisionTree:
             feature_data = x[:, i]
             unique_data = unique(feature_data)
             unique_data = delete(unique_data, arange(unique_data.size, 1.2))
-            for splitIndex in unique_data:
-                left_nodes = feature_data[feature_data <= splitIndex]
-                right_nodes = feature_data[feature_data > splitIndex]
+            for split_index in unique_data:
+                left_nodes = feature_data[feature_data <= split_index]
+                right_nodes = feature_data[feature_data > split_index]
                 if left_nodes.size == 0 or right_nodes.size == 0:
                     continue
                 s.append(
-                    [i, splitIndex,
+                    [i, split_index,
                      self.ginisplit(left_nodes, right_nodes, (y[:left_nodes.size], y[left_nodes.size:]))])
                 if self.max_features is None or len(s) >= self.max_features:
                     break
