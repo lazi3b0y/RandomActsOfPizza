@@ -36,7 +36,7 @@ def main():
         "sklearn_random_forest": sklearn_random_forest
     }
 
-    kf = cross_validation.KFold(n = n_elements, n_folds = n_folds)
+    cross_val = cross_validation.KFold(n = n_elements, n_folds = n_folds)
     predictions = {}
     for key, classifier in classifiers.items():
         result = list()
@@ -50,7 +50,7 @@ def main():
         avg_test_time = 0.0
 
         print_label(key)
-        for train, test in kf:
+        for train, test in cross_val:
             train_feature_set = feature_set[train]
             train_class_set = class_set[train]
             test_feature_set = feature_set[test]
@@ -132,7 +132,7 @@ if __name__ == "__main__":
     #
     #     n_folds = 10
     #     printed = False
-    #     kf = sklearn.cross_validation.KFold(feature_set.shape[0], n_folds=n_folds)
+    #     cross_val = sklearn.cross_validation.KFold(feature_set.shape[0], n_folds=n_folds)
     #     predictions = {}
     #     for label, classifier in classifiers.items():
     #         result = list()
@@ -146,7 +146,7 @@ if __name__ == "__main__":
     #         avg_test_time = 0.0
     #
     #         print(label)
-    #         for train, test in kf:
+    #         for train, test in cross_val:
     #             train_feature_set = feature_set[train]
     #             train_class_set = class_set[train]
     #             test_feature_set = feature_set[test]

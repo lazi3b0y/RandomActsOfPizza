@@ -21,30 +21,32 @@ def print_spearman_and_pearson(data):
         print('     {} {}\n'.format('Pearson:  ', scipy.stats.pearsonr(x, y)))
 
 
-def print_tree(node, depth):
+def print_tree(root_node, depth):
     from classifiers.decision_tree import DecisionTree
-    if isinstance(node, DecisionTree):
+    if isinstance(root_node, DecisionTree):
         v = "+--"
         for i in range(depth):
             v = "|  " + v
-        v += " " + array_str(node.value)
+        v += " " + array_str(root_node.value)
         print(v)
-        print_tree(node.leftChild, depth + 1)
-        print_tree(node.rightChild, depth + 1)
+        print_tree(root_node.left_child, depth + 1)
+        print_tree(root_node.right_child, depth + 1)
     else:
         v = "+-"
         for i in range(depth):
             v = "|  " + v
         v += "["
-        v += str(Counter(node).most_common(2)) + ", "
+        v += str(Counter(root_node).most_common(2)) + ", "
         v = v[:-2] + "]"
         print(v)
+
 
 def print_label(label):
     print("\n")
     print("##############################")
     print("     {}".format(label))
     print("##############################")
+
 
 def print_statistics(folds, avg_accuracy, avg_precision, avg_recall, avg_auc, avg_train_time, avg_test_time, result):
     print("Average over {} folds".format(folds))
@@ -63,4 +65,4 @@ def print_wilcoxon(predictions):
     print(wilcoxon(x = predictions['custom_decision_tree'], y = predictions['sklearn_decision_tree']))
     print("Wilcoxon Result for Random Forest: ")
     print(wilcoxon(x = predictions['custom_random_forest'], y = predictions['sklearn_random_forest']))
-    print("##############################################")
+    print("##############################################") 
