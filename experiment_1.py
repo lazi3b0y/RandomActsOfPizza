@@ -13,9 +13,18 @@ import sklearn
 def experiment_1():
     # Relative file paths to the .json file and .csv file.
     json_path = 'resources/train.json'
-    csv_path = 'resources/multi_data_sets/splice.csv'
+    csv_path = 'resources/multi_data_sets/iris.csv'
 
-    # Load and parse the json file, and then save the parsed data
+    # Check if the current data set is binary or multi to
+    # know what kid of average should be used with some of
+    # the metric functions later on.
+    index = csv_path.find('binary_data_set')
+    if index >= 0:  # If the word 'binary' is found in the current path to teh csv file.
+        average = "binary"
+    else:  # If the word was not found.
+        average = "weighted"
+
+    # Load and parse the json file, then save the parsed data
     # to a .csv file for later use. If raop.csv already exists
     # this can be safetly ignored and left commented.
     # parse_json(json_path, csv_path)
@@ -115,8 +124,8 @@ def experiment_1():
         for row in range(len(result)):
             avg_accuracy += sklearn.metrics.accuracy_score(result[row][0], result[row][1])
             predictions[key].append(sklearn.metrics.accuracy_score(result[row][0], result[row][1]))
-            avg_precision += sklearn.metrics.precision_score(result[row][0], result[row][1], average = "weighted")
-            avg_recall += sklearn.metrics.recall_score(result[row][0], result[row][1], average = "weighted")
+            avg_precision += sklearn.metrics.precision_score(result[row][0], result[row][1], average = average)
+            avg_recall += sklearn.metrics.recall_score(result[row][0], result[row][1], average = average)
 
             uniq_values = numpy.unique(result[row][0])
             pred_pbty_sub_set = numpy.array(pred_pbty[row])
