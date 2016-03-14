@@ -49,11 +49,10 @@ def print_label(label):
 
 
 def print_statistics(folds, avg_accuracy, avg_precision, avg_recall, avg_auc, avg_train_time, avg_test_time, result):
-    print("Average over {} folds".format(folds))
-    print('Accuracy: {0:.3f}'.format(avg_accuracy / float(len(result))))
-    print("Precision: {0:.3f}".format(avg_precision / float(len(result))))
-    print("Recall: {0:.3f}".format(avg_recall / float(len(result))))
-    print("Auc: {0:.3f}".format(avg_auc / float(len(result))))
+    print('Accuracy: {}'.format(avg_accuracy / float(len(result))))
+    print("Precision: {}".format(avg_precision / float(len(result))))
+    print("Recall: {}".format(avg_recall / float(len(result))))
+    print("Auc: {}".format(avg_auc / float(len(result))))
     print('Training time: {}'.format((avg_train_time / float(len(result)))))
     print('Test time: {}'.format((avg_test_time / float(len(result)))))
 

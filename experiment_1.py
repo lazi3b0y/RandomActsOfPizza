@@ -22,11 +22,19 @@ def main():
     min_samples_leaf = 30
     max_features = None
 
-    custom_decision_tree = DecisionTree(max_depth = max_depth, min_samples_leaf = min_samples_leaf)
-    sklearn_decision_tree = DecisionTreeClassifier(max_depth = max_depth, min_samples_leaf = min_samples_leaf, max_features = max_features)
+    custom_decision_tree = DecisionTree(max_depth = max_depth,
+                                        min_samples_leaf = min_samples_leaf)
 
-    custom_random_forest = RandomForest(max_depth = max_depth, min_samples_leaf = min_samples_leaf)
-    sklearn_random_forest = RandomForestClassifier(max_depth = max_depth, min_samples_leaf = min_samples_leaf, max_features = max_features)
+    sklearn_decision_tree = DecisionTreeClassifier(max_depth = max_depth,
+                                                   min_samples_leaf = min_samples_leaf,
+                                                   max_features = max_features)
+
+    custom_random_forest = RandomForest(max_depth = max_depth,
+                                        min_samples_leaf = min_samples_leaf)
+
+    sklearn_random_forest = RandomForestClassifier(max_depth = max_depth,
+                                                   min_samples_leaf = min_samples_leaf,
+                                                   max_features = max_features)
 
     classifiers = {
         "custom_decision_tree": custom_decision_tree,
@@ -35,7 +43,8 @@ def main():
         "sklearn_random_forest": sklearn_random_forest
     }
 
-    cross_val = sklearn.cross_validation.KFold(n = n_elements, n_folds = n_folds)
+    cross_val = sklearn.cross_validation.KFold(n = n_elements,
+                                               n_folds = n_folds)
     predictions = {}
     for key, classifier in classifiers.items():
         result = list()
@@ -94,7 +103,10 @@ def main():
             maximized_pbty_sub_set = numpy.array([max(pbty_pair) for pbty_pair in pred_pbty_sub_set])
             if len(uniq_values) > 2:
                 for i in uniq_values:
-                    false_posi_rates, true_posi_rates, thresholds = sklearn.metrics.roc_curve(y_true = result[row][0], y_score = maximized_pbty_sub_set, pos_label = int(i))
+                    false_posi_rates, true_posi_rates, thresholds = sklearn.metrics.roc_curve(y_true = result[row][0],
+                                                                                              y_score = maximized_pbty_sub_set,
+                                                                                              pos_label = int(i))
+
                     avg_auc += sklearn.metrics.auc(false_posi_rates, true_posi_rates)
                 avg_auc /= uniq_values.size / 2.0
             else:

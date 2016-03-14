@@ -49,8 +49,11 @@ class DecisionTree:
                                         max_depth=self.max_depth - 1 if self.max_depth is not None else self.max_depth,
                                         max_features=self.max_features)
 
-        self.left_child = left_child_tree.fit(x[left_split], y[left_split])
-        self.right_child = right_child_tree.fit(x[right_split], y[right_split])
+        self.left_child = left_child_tree.fit(x[left_split],
+                                              y[left_split])
+
+        self.right_child = right_child_tree.fit(x[right_split],
+                                                y[right_split])
 
         return self
 
@@ -101,7 +104,7 @@ class DecisionTree:
         for i in range(x.shape[1]):
             feature_data = x[:, i]
             unique_data = unique(feature_data)
-            unique_data = delete(unique_data, arange(0, unique_data.size, 1.2))
+            unique_data = delete(unique_data, arange(unique_data.size, 1.2))
             for splitIndex in unique_data:
                 left_nodes = feature_data[feature_data <= splitIndex]
                 right_nodes = feature_data[feature_data > splitIndex]
