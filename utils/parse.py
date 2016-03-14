@@ -51,9 +51,9 @@ def parse_csv(relative_file_path):
     csv_data = pandas.read_csv(file_path)
 
     class_set = csv_data.as_matrix(columns = csv_data.columns[-1:])
-    class_set = numpy.array(class_set).astype('float')
+    class_set = numpy.array(class_set)
 
-    feature_set = csv_data.as_matrix(columns = csv_data.columns[1:])
+    feature_set = csv_data.as_matrix(columns = csv_data.columns[:-1])
     feature_set = numpy.array(feature_set).astype('float')
     # feature_set = numpy.around(feature_set, decimals = 8)
 

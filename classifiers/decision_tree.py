@@ -5,7 +5,7 @@ import math
 
 
 class DecisionTree:
-    def __init__(self, max_features = None, max_depth = None, min_samples_leaf=1, laplace=0):
+    def __init__(self, max_features=None, max_depth=None, min_samples_leaf=1, laplace=0):
         self.max_features = max_features
         self.max_depth = max_depth
         self.min_samples_leaf = min_samples_leaf
@@ -22,10 +22,7 @@ class DecisionTree:
         if self.n_classes is None:
             self.n_classes = unique(y)
 
-        if self.max_depth == None:
-            self.max_depth = -1
-
-        if self.max_depth == 0:
+        if self.max_depth is not None and self.max_depth == 0:
             return y
 
         if len(x) <= self.min_samples_leaf:
@@ -43,18 +40,17 @@ class DecisionTree:
         self.value = splits[i]
         left_split = x[:, self.value[0]] <= self.value[1]
         right_split = x[:, self.value[0]] > self.value[1]
-        l = x[left_split]
-        r = x[right_split]
-        left_child_tree = DecisionTree(min_samples_leaf = self.min_samples_leaf,
-                                          max_depth = self.max_depth - 1 if self.max_depth != -1 else self.max_depth,
-                                          max_features = self.max_features)
 
-        right_child_tree = DecisionTree(min_samples_leaf = self.min_samples_leaf,
-                                          max_depth = self.max_depth - 1 if self.max_depth != -1 else self.max_depth,
-                                          max_features = self.max_features)
+        left_child_tree = DecisionTree(min_samples_leaf=self.min_samples_leaf,
+                                       max_depth=self.max_depth - 1 if self.max_depth is not None else self.max_depth,
+                                       max_features=self.max_features)
 
-        self.left_child = left_child_tree.fit(l, y[left_split])
-        self.right_child = right_child_tree.fit(r, y[right_split])
+        right_child_tree = DecisionTree(min_samples_leaf=self.min_samples_leaf,
+                                        max_depth=self.max_depth - 1 if self.max_depth is not None else self.max_depth,
+                                        max_features=self.max_features)
+
+        self.left_child = left_child_tree.fit(x[left_split], y[left_split])
+        self.right_child = right_child_tree.fit(x[right_split], y[right_split])
 
         return self
 
@@ -112,15 +108,16 @@ class DecisionTree:
                 if left_nodes.size == 0 or right_nodes.size == 0:
                     continue
                 s.append(
-                    [i, splitIndex, self.ginisplit(left_nodes, right_nodes, (y[:left_nodes.size], y[left_nodes.size:]))])
+                    [i, splitIndex,
+                     self.ginisplit(left_nodes, right_nodes, (y[:left_nodes.size], y[left_nodes.size:]))])
                 if self.max_features is None or len(s) >= self.max_features:
                     break
         return s
 
     def gini(self, x, y):
-        unique_values = unique(y)
+        uniq_values = unique(y)
         result = 0
-        for value in unique_values:
+        for value in uniq_values:
             result += math.pow(self.probability((y[y == value]).shape[0], (y[y != value]).shape[0]), 2)
         return 1.0 - result
 
