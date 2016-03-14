@@ -17,8 +17,8 @@ def print_spearman_and_pearson(data):
         y = data["received_pizza"]
 
         print("{}: ".format(column))
-        print("     {} {}".format("Spearman: ", scipy.stats.spearmanr(x, y)))
-        print("     {} {}\n".format("Pearson:  ", scipy.stats.pearsonr(x, y)))
+        print("\t\t{} {}".format("Spearman: ", scipy.stats.spearmanr(x, y)))
+        print("\t\t{} {}\n".format("Pearson:  ", scipy.stats.pearsonr(x, y)))
 
 
 def print_tree(root_node, depth):
