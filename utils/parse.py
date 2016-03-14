@@ -50,6 +50,8 @@ def parse_csv(relative_file_path):
     file_path = os.path.join(script_path, relative_file_path)
     csv_data = pandas.read_csv(file_path)
 
+    csv_data = csv_data.reindex(numpy.random.permutation(csv_data.index))
+
     class_set = csv_data.as_matrix(columns = csv_data.columns[-1:])
     class_set = numpy.array(class_set)
 

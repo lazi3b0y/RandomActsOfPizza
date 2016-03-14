@@ -10,27 +10,46 @@ import numpy
 import sklearn
 
 
-def main():
-    # json_path = 'resources/train.json'
-    csv_path = 'resources/raop.csv'
+def experiment_1():
+    # Relative file paths to the .json file and .csv file.
+    json_path = 'resources/train.json'
+    csv_path = 'resources/multi_data_sets/splice.csv'
+
+    # Load and parse the json file, and then save the parsed data
+    # to a .csv file for later use. If raop.csv already exists
+    # this can be safetly ignored and left commented.
     # parse_json(json_path, csv_path)
+
+    # Load and parse the csv. Returns two numpy arrays.
+    # One containing the classes and one with the features.
     class_set, feature_set = parse_csv(csv_path)
 
-    n_folds = 10
-    n_elements = feature_set.shape[0]
+    # 'Decision Tree'/'Random Forest' parameters.
     max_depth = 10
     min_samples_leaf = 30
     max_features = None
 
+    # 'Cross Validation' parameters
+    n_folds = 10
+    n_elements = feature_set.shape[0]
+
+    # Creation of the two Decision Tree Classifiers we'll be using during this experiment.
+    # 'custom_decision_tree' is our own implementation of hunt's algorithm, while 'sklearn_decision_tree'
+    # is scikit-learn's version of a Decision Tree Classifier.
     custom_decision_tree = DecisionTree(max_depth = max_depth,
-                                        min_samples_leaf = min_samples_leaf)
+                                        min_samples_leaf = min_samples_leaf,
+                                        max_features = max_features)
 
     sklearn_decision_tree = DecisionTreeClassifier(max_depth = max_depth,
                                                    min_samples_leaf = min_samples_leaf,
                                                    max_features = max_features)
 
+    # Creation of the two Random Forest Classifiers we'll be using during this experiment.
+    # 'custom_random_forest' is our own implementation, while 'sklearn_random_forest'
+    # is scikit-learn's version of a Decision Tree Classifier.
     custom_random_forest = RandomForest(max_depth = max_depth,
-                                        min_samples_leaf = min_samples_leaf)
+                                        min_samples_leaf = min_samples_leaf,
+                                        max_features = max_features)
 
     sklearn_random_forest = RandomForestClassifier(max_depth = max_depth,
                                                    min_samples_leaf = min_samples_leaf,
@@ -43,6 +62,7 @@ def main():
         "sklearn_random_forest": sklearn_random_forest
     }
 
+    # This performs our 10x10 Fold Cross Validation.
     cross_val = sklearn.cross_validation.KFold(n = n_elements,
                                                n_folds = n_folds)
     predictions = {}
@@ -95,27 +115,25 @@ def main():
         for row in range(len(result)):
             avg_accuracy += sklearn.metrics.accuracy_score(result[row][0], result[row][1])
             predictions[key].append(sklearn.metrics.accuracy_score(result[row][0], result[row][1]))
-            avg_precision += sklearn.metrics.precision_score(result[row][0], result[row][1])
-            avg_recall += sklearn.metrics.recall_score(result[row][0], result[row][1])
+            avg_precision += sklearn.metrics.precision_score(result[row][0], result[row][1], average = "weighted")
+            avg_recall += sklearn.metrics.recall_score(result[row][0], result[row][1], average = "weighted")
 
             uniq_values = numpy.unique(result[row][0])
             pred_pbty_sub_set = numpy.array(pred_pbty[row])
             maximized_pbty_sub_set = numpy.array([max(pbty_pair) for pbty_pair in pred_pbty_sub_set])
             if len(uniq_values) > 2:
                 for i in uniq_values:
-                    false_posi_rates, true_posi_rates, thresholds = sklearn.metrics.roc_curve(y_true = result[row][0],
-                                                                                              y_score = maximized_pbty_sub_set,
-                                                                                              pos_label = int(i))
+                    false_posi_rates, true_posi_rates, thresholds = sklearn.metrics.roc_curve(result[row][0], maximized_pbty_sub_set, int(i))
 
                     avg_auc += sklearn.metrics.auc(false_posi_rates, true_posi_rates)
                 avg_auc /= uniq_values.size / 2.0
             else:
                 false_posi_rates, true_posi_rates, thresholds = sklearn.metrics.roc_curve(result[row][0], maximized_pbty_sub_set)
                 avg_auc += sklearn.metrics.auc(false_posi_rates, true_posi_rates)
-        print_statistics(n_folds, avg_accuracy, avg_precision, avg_recall, avg_auc, avg_train_time, avg_test_time, result)
+        print_statistics(avg_accuracy, avg_precision, avg_recall, avg_auc, avg_train_time, avg_test_time, result)
 
     print_wilcoxon(predictions)
 
 
 if __name__ == "__main__":
-    main()
+    experiment_1()

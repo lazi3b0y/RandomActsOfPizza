@@ -3,7 +3,7 @@ from numpy import array_str
 from collections import Counter
 from scipy.stats import wilcoxon
 
-__author__ = 'Simon & Oskar'
+__author__ = "Simon & Oskar"
 
 
 def print_csv(csv_data):
@@ -14,11 +14,11 @@ def print_csv(csv_data):
 def print_spearman_and_pearson(data):
     for column in data.columns[:-1]:  # all columns except last
         x = data[column]
-        y = data['received_pizza']
+        y = data["received_pizza"]
 
-        print('{}: '.format(column))
-        print('     {} {}'.format('Spearman: ', scipy.stats.spearmanr(x, y)))
-        print('     {} {}\n'.format('Pearson:  ', scipy.stats.pearsonr(x, y)))
+        print("{}: ".format(column))
+        print("     {} {}".format("Spearman: ", scipy.stats.spearmanr(x, y)))
+        print("     {} {}\n".format("Pearson:  ", scipy.stats.pearsonr(x, y)))
 
 
 def print_tree(root_node, depth):
@@ -44,17 +44,17 @@ def print_tree(root_node, depth):
 def print_label(label):
     print("\n")
     print("##############################")
-    print("     {}".format(label))
+    print("\t{}".format(label))
     print("##############################")
 
 
-def print_statistics(folds, avg_accuracy, avg_precision, avg_recall, avg_auc, avg_train_time, avg_test_time, result):
-    print('Accuracy: {}'.format(avg_accuracy / float(len(result))))
-    print("Precision: {}".format(avg_precision / float(len(result))))
-    print("Recall: {}".format(avg_recall / float(len(result))))
-    print("Auc: {}".format(avg_auc / float(len(result))))
-    print('Training time: {}'.format((avg_train_time / float(len(result)))))
-    print('Test time: {}'.format((avg_test_time / float(len(result)))))
+def print_statistics(avg_accuracy, avg_precision, avg_recall, avg_auc, avg_train_time, avg_test_time, result):
+    print("Accuracy:\t\t{}".format(avg_accuracy / float(len(result))))
+    print("Precision:\t\t{}".format(avg_precision / float(len(result))))
+    print("Recall:\t\t\t{}".format(avg_recall / float(len(result))))
+    print("Auc:\t\t\t{}".format(avg_auc / float(len(result))))
+    print("Training time:\t{}".format((avg_train_time / float(len(result)))))
+    print("Test time:\t\t{}".format((avg_test_time / float(len(result)))))
 
 
 def print_wilcoxon(predictions):
@@ -64,4 +64,16 @@ def print_wilcoxon(predictions):
     print(wilcoxon(x = predictions['custom_decision_tree'], y = predictions['sklearn_decision_tree']))
     print("Wilcoxon Result for Random Forest: ")
     print(wilcoxon(x = predictions['custom_random_forest'], y = predictions['sklearn_random_forest']))
-    print("##############################################") 
+    print("##############################################")
+
+
+def print_clf_parameters(max_depth, min_samples_leaf, n_estimators):
+    print("##############################")
+    print("\tClassifier parameters")
+    print("##############################")
+    print("{}".format("Max depth:"))
+    print("{}".format(max_depth))
+    print("{}".format("Min_sample_leaf:"))
+    print("{}".format(min_samples_leaf))
+    print("{}".format("Number of estimators:"))
+    print("{}".format(n_estimators))

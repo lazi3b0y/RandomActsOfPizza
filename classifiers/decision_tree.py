@@ -1,6 +1,7 @@
 from numpy import unique, argmin, array, zeros, delete, arange
 from collections import Counter
 from utils.print import print_tree
+
 import math
 
 
@@ -137,8 +138,8 @@ class DecisionTree:
     @staticmethod
     def laplace(x):
         result = []
-        unique_classes = unique(x)
-        for c in unique_classes:
+        uniq_classes = unique(x)
+        for c in uniq_classes:
             t = x[x == c]
-            result.append(float(t.shape[0] + 1) / float(x.shape[0] + unique_classes.shape[0]))
+            result.append(float(t.shape[0] + 1) / float(x.shape[0] + uniq_classes.shape[0]))
         return result

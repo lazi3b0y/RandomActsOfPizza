@@ -5,11 +5,12 @@ from collections import Counter
 
 __author__ = 'Simon & Oskar'
 
+
 # TODO: Rename variables, restructure code(?), comment code
 class RandomForest:
-    def __init__(self, max_depth=None, min_samples_leaf=1, n_estimators=10, sample_size=200):
+    def __init__(self, max_depth = None, min_samples_leaf = 1, n_estimators = 10, sample_size = 200, max_features = None):
         self.criterion = "gini"
-        self.max_features = None
+        self.max_features = max_features
         self.max_depth = max_depth
         self.min_samples_leaf = min_samples_leaf
         self.laplace = 0
@@ -40,7 +41,6 @@ class RandomForest:
             tree = DecisionTree(max_features = self.max_features, max_depth = self.max_depth, min_samples_leaf = self.min_samples_leaf, laplace = self.laplace)
             tree.fit(random_samples[i], random_samples_class[i])
             self.trees.append(tree)
-
 
     def predict(self, x):
         finalResult = numpy.zeros((x.shape[0]), self.classType)
