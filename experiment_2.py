@@ -105,9 +105,24 @@ def experiment_2a():
 
                         v.fit(train_feature_set, train_class_set.ravel())
 
-                        p = v.predict(test_feature_set)
+                        prediction = v.predict(test_feature_set)
 
-                        result.append(HelpFunctions.convert_pred_and_class_sets_to_values(test_class_set, p))
+                        true_set = numpy.array([c[0] for c in test_class_set])
+                        pred_set = numpy.array([p for p in prediction])
+
+                        uniq_values = numpy.unique(numpy.concatenate((true_set, pred_set)))
+
+                        for i in range(test_class_set.shape[0]):
+                            for j in range(uniq_values.shape[0]):
+                                if test_class_set[i] == uniq_values[j]:
+                                    true_set[i] = j
+                                if prediction[i] == uniq_values[j]:
+                                    pred_set[i] = j
+
+                        true_set = true_set.astype('float32')
+                        pred_set = pred_set.astype('float32')
+
+                        result.append([true_set, pred_set])
 
                     for r1 in range(len(result)):
                         avg_accuracy += sklearn.metrics.accuracy_score(result[r1][0], result[r1][1])

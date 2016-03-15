@@ -17,11 +17,11 @@ def experiment_1():
 
     # Check if the current data set is binary or multi to
     # know what kid of average should be used with some of
-    # the metric functions later on.
+    # the sklearn.metric methods later on.
     index = csv_path.find('binary_data_set')
-    if index >= 0:  # If the word 'binary' is found in the current path to teh csv file.
+    if index >= 0:  # If the string 'binary_data_set' is found in the current path to the .csv file.
         average = "binary"
-    else:  # If the word was not found.
+    else:  # If the string 'binary_data_set' was not found.
         average = "weighted"
 
     # Load and parse the json file, then save the parsed data
@@ -123,22 +123,24 @@ def experiment_1():
         predictions[key] = list()
         for row in range(len(result)):
             avg_accuracy += sklearn.metrics.accuracy_score(result[row][0], result[row][1])
-            predictions[key].append(sklearn.metrics.accuracy_score(result[row][0], result[row][1]))
+            predictions[key].append(sklearn.metrics.precision_score(result[row][0], result[row][1], average = average))
             avg_precision += sklearn.metrics.precision_score(result[row][0], result[row][1], average = average)
             avg_recall += sklearn.metrics.recall_score(result[row][0], result[row][1], average = average)
 
             uniq_values = numpy.unique(result[row][0])
             pred_pbty_sub_set = numpy.array(pred_pbty[row])
             maximized_pbty_sub_set = numpy.array([max(pbty_pair) for pbty_pair in pred_pbty_sub_set])
+
             if len(uniq_values) > 2:
                 for i in uniq_values:
                     false_posi_rates, true_posi_rates, thresholds = sklearn.metrics.roc_curve(result[row][0], maximized_pbty_sub_set, int(i))
-
                     avg_auc += sklearn.metrics.auc(false_posi_rates, true_posi_rates)
+
                 avg_auc /= uniq_values.size / 2.0
             else:
                 false_posi_rates, true_posi_rates, thresholds = sklearn.metrics.roc_curve(result[row][0], maximized_pbty_sub_set)
                 avg_auc += sklearn.metrics.auc(false_posi_rates, true_posi_rates)
+
         print_statistics(avg_accuracy, avg_precision, avg_recall, avg_auc, avg_train_time, avg_test_time, result)
 
     print_wilcoxon(predictions)
