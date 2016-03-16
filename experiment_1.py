@@ -19,38 +19,38 @@ def experiment_1():
     json_path = 'resources/train.json'
     # csv_paths = ['resources/multi_data_sets/letter.csv']
 
-    # csv_paths = [
-    #     'resources/multi_data_sets/glass.csv',
-    #     'resources/multi_data_sets/iris.csv',
-    #     # 'resources/multi_data_sets/letter.csv',
-    #     'resources/multi_data_sets/segment.csv',
-    #     'resources/multi_data_sets/splice.csv',
-    #     'resources/multi_data_sets/vehicle.csv',
-    #     'resources/multi_data_sets/waveform-5000.csv',
-    # ]
-
     csv_paths = [
-        "resources/binary_data_sets/balance-scale.csv",
-        "resources/binary_data_sets/breast-cancer.csv",
-        "resources/binary_data_sets/breast-w.csv",
-        "resources/binary_data_sets/credit-a.csv",
-        "resources/binary_data_sets/credit-g.csv",
-        "resources/binary_data_sets/diabetes.csv",
-        "resources/binary_data_sets/haberman.csv",
-        "resources/binary_data_sets/heart-c.csv",
-        "resources/binary_data_sets/heart-h.csv",
-        "resources/binary_data_sets/heart-s.csv",
-        "resources/binary_data_sets/hepatitis.csv",
-        "resources/binary_data_sets/ionosphere.csv",
-        "resources/binary_data_sets/kr-vs-kp.csv",
-        "resources/binary_data_sets/labor.csv",
-        "resources/binary_data_sets/liver-disorders",
-        "resources/binary_data_sets/mushroom.csv",
-        "resources/binary_data_sets/sick.csv",
-        "resources/binary_data_sets/sonar.csv",
-        "resources/binary_data_sets/spambase.csv",
-        "resources/binary_data_sets/tic-tac-toe.csv",
+        'resources/multi_data_sets/letter.csv',
+        'resources/multi_data_sets/glass.csv',
+        'resources/multi_data_sets/iris.csv',
+        'resources/multi_data_sets/segment.csv',
+        'resources/multi_data_sets/splice.csv',
+        'resources/multi_data_sets/vehicle.csv',
+        'resources/multi_data_sets/waveform-5000.csv',
     ]
+
+    # csv_paths = [
+    #     "resources/binary_data_sets/balance-scale.csv",
+    #     "resources/binary_data_sets/breast-cancer.csv",
+    #     "resources/binary_data_sets/breast-w.csv",
+    #     "resources/binary_data_sets/credit-a.csv",
+    #     "resources/binary_data_sets/credit-g.csv",
+    #     "resources/binary_data_sets/diabetes.csv",
+    #     "resources/binary_data_sets/haberman.csv",
+    #     "resources/binary_data_sets/heart-c.csv",
+    #     "resources/binary_data_sets/heart-h.csv",
+    #     "resources/binary_data_sets/heart-s.csv",
+    #     "resources/binary_data_sets/hepatitis.csv",
+    #     "resources/binary_data_sets/ionosphere.csv",
+    #     "resources/binary_data_sets/kr-vs-kp.csv",
+    #     "resources/binary_data_sets/labor.csv",
+    #     "resources/binary_data_sets/liver-disorders",
+    #     "resources/binary_data_sets/mushroom.csv",
+    #     "resources/binary_data_sets/sick.csv",
+    #     "resources/binary_data_sets/sonar.csv",
+    #     "resources/binary_data_sets/spambase.csv",
+    #     "resources/binary_data_sets/tic-tac-toe.csv",
+    # ]
 
     # Load and parse the json file, then save the parsed data
     # to a .csv file for later use. If raop.csv already exists
@@ -94,10 +94,10 @@ def experiment_1():
 
     # Initialization of the dictionary where our predictions will be stored.
     predictions = {
-        "custom_decision_tree": list(),
-        "custom_random_forest": list(),
-        "sklearn_decision_tree": list(),
-        "sklearn_random_forest": list(),
+        "custom_decision_tree": numpy.empty(0),
+        "custom_random_forest": numpy.empty(0),
+        "sklearn_decision_tree": numpy.empty(0),
+        "sklearn_random_forest": numpy.empty(0),
     }
 
     for path in csv_paths:
@@ -161,7 +161,7 @@ def experiment_1():
 
             for row in range(len(result)):
                 avg_accuracy += sklearn.metrics.accuracy_score(result[row][0], result[row][1])
-                predictions[key].append(sklearn.metrics.accuracy_score(result[row][0], result[row][1]))
+                numpy.append(predictions[key], sklearn.metrics.accuracy_score(result[row][0], result[row][1]))
                 avg_precision += sklearn.metrics.precision_score(result[row][0], result[row][1], average = average)
                 avg_recall += sklearn.metrics.recall_score(result[row][0], result[row][1], average = average)
 
