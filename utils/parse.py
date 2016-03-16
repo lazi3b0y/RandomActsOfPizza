@@ -2,6 +2,7 @@ import json
 import pandas
 import numpy
 import os
+from utils.utility import convert_strings_to_numeric
 
 __author__ = 'Simon & Oskar'
 
@@ -54,10 +55,11 @@ def parse_csv(relative_file_path):
 
     class_set = csv_data.as_matrix(columns = csv_data.columns[-1:])
     class_set = numpy.array(class_set)
+
     try:
         class_set = class_set.astype(numpy.float)
-    except:
-        pass
+    except ValueError:
+        class_set = convert_strings_to_numeric(class_set)
 
     feature_set = csv_data.as_matrix(columns = csv_data.columns[:-1])
     feature_set = numpy.array(feature_set).astype(numpy.float)

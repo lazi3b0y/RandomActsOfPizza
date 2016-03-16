@@ -7,27 +7,25 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from time import time
 
+import warnings
 import numpy
 import sklearn
 
 
 def experiment_1():
-    import warnings
-    warnings.filterwarnings("ignore")
-
     # Relative file paths to the .json file and .csv file.
     json_path = 'resources/train.json'
-    # csv_paths = ['resources/multi_data_sets/letter.csv']
+    csv_paths = ["resources/binary_data_sets/haberman.csv"]
 
-    csv_paths = [
-        'resources/multi_data_sets/letter.csv',
-        'resources/multi_data_sets/glass.csv',
-        'resources/multi_data_sets/iris.csv',
-        'resources/multi_data_sets/segment.csv',
-        'resources/multi_data_sets/splice.csv',
-        'resources/multi_data_sets/vehicle.csv',
-        'resources/multi_data_sets/waveform-5000.csv',
-    ]
+    # csv_paths = [
+    #     'resources/multi_data_sets/letter.csv',
+    #     'resources/multi_data_sets/glass.csv',
+    #     'resources/multi_data_sets/iris.csv',
+    #     'resources/multi_data_sets/segment.csv',
+    #     'resources/multi_data_sets/splice.csv',
+    #     'resources/multi_data_sets/vehicle.csv',
+    #     'resources/multi_data_sets/waveform-5000.csv',
+    # ]
 
     # csv_paths = [
     #     "resources/binary_data_sets/balance-scale.csv",
@@ -94,10 +92,10 @@ def experiment_1():
 
     # Initialization of the dictionary where our predictions will be stored.
     predictions = {
-        "custom_decision_tree": numpy.empty(0),
-        "custom_random_forest": numpy.empty(0),
-        "sklearn_decision_tree": numpy.empty(0),
-        "sklearn_random_forest": numpy.empty(0),
+        "custom_decision_tree": list(),
+        "custom_random_forest": list(),
+        "sklearn_decision_tree": list(),
+        "sklearn_random_forest": list(),
     }
 
     for path in csv_paths:
@@ -154,10 +152,7 @@ def experiment_1():
                 pred_pbty.append(classifier.predict_proba(numpy.array(test_feature_set)))
                 avg_test_time += time() - start
 
-                if test_class_set.dtype != 'float64':
-                    test_class_set, prediction = convert_strings_to_numeric(test_class_set, prediction)
-
-                result.append([test_class_set, prediction])
+                result.append([test_class_set.ravel(), prediction])
 
             for row in range(len(result)):
                 avg_accuracy += sklearn.metrics.accuracy_score(result[row][0], result[row][1])
@@ -165,11 +160,11 @@ def experiment_1():
                 avg_recall += sklearn.metrics.recall_score(result[row][0], result[row][1], average = average)
 
                 # Add the accuracy score to our array of values to later be used when comparing our classifiers.
-                numpy.append(predictions[key], sklearn.metrics.accuracy_score(result[row][0], result[row][1]))
+                predictions[key].append(sklearn.metrics.accuracy_score(result[row][0], result[row][1]))
 
                 uniq_values = numpy.unique(result[row][0])
-                pred_pbty_sub_set = numpy.array(pred_pbty[row])
-                maximized_pbty_sub_set = numpy.array([max(pbty_pair) for pbty_pair in pred_pbty_sub_set])
+                pred_pbty_row = numpy.array(pred_pbty[row])
+                maximized_pbty_sub_set = numpy.array([max(pbty_pair) for pbty_pair in pred_pbty_row])
 
                 if len(uniq_values) > 2:
                     for value in uniq_values:
@@ -187,4 +182,5 @@ def experiment_1():
 
 
 if __name__ == "__main__":
+    warnings.filterwarnings("ignore")
     experiment_1()
