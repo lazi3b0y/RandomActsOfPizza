@@ -27,13 +27,12 @@ def experiment_2():
         "resources/multi_data_sets/vehicle.csv",
     ]
 
-    # A dictionary containing our classifiers that were initialized before.
     classifiers = {
         # "custom_decision_tree": None,
-        # "custom_random_forest": None,
+        "custom_random_forest": None,
         # "sklearn_decision_tree": None,
         # "sklearn_random_forest": None,
-        "sklearn_neighbors": None,
+        # "sklearn_neighbors": None,
     }
 
     value_matrix_1 = [v for v in range(5, 51, 5)]
@@ -65,14 +64,14 @@ def experiment_2():
                                      n_neighbors = value_matrix_1[i],
                                      leaf_size = value_matrix_2[j])
 
-                # classifiers["custom_random_forest"] = RandomForest(n_estimators = value_matrix_2[j],
-                #                                                    max_depth = value_matrix_1[i])
+                classifiers["custom_random_forest"] = RandomForest(n_estimators = value_matrix_2[j],
+                                                                   max_depth = value_matrix_1[i])
 
                 # classifiers["sklearn_random_forest"] = RandomForestClassifier(n_estimators = value_matrix_2[j],
                 #                                                               max_depth = value_matrix_1[i])
 
-                classifiers["sklearn_neighbors"] = KNeighborsClassifier(n_neighbors = value_matrix_1[i],
-                                                                        leaf_size = value_matrix_2[j])
+                # classifiers["sklearn_neighbors"] = KNeighborsClassifier(n_neighbors = value_matrix_1[i],
+                #                                                         leaf_size = value_matrix_2[j])
 
                 for key, classifier in classifiers.items():
                     result = list()
@@ -85,7 +84,8 @@ def experiment_2():
                         test_feature_set = feature_set[test]
                         test_class_set = class_set[test]
 
-                        classifier.fit(train_feature_set, train_class_set.ravel())
+                        classifier.fit(X = train_feature_set,
+                                       y = train_class_set.ravel())
 
                         prediction = classifier.predict(test_feature_set)
 
