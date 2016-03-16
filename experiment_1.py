@@ -161,9 +161,11 @@ def experiment_1():
 
             for row in range(len(result)):
                 avg_accuracy += sklearn.metrics.accuracy_score(result[row][0], result[row][1])
-                numpy.append(predictions[key], sklearn.metrics.accuracy_score(result[row][0], result[row][1]))
                 avg_precision += sklearn.metrics.precision_score(result[row][0], result[row][1], average = average)
                 avg_recall += sklearn.metrics.recall_score(result[row][0], result[row][1], average = average)
+
+                # Add the accuracy score to our array of values to later be used when comparing our classifiers.
+                numpy.append(predictions[key], sklearn.metrics.accuracy_score(result[row][0], result[row][1]))
 
                 uniq_values = numpy.unique(result[row][0])
                 pred_pbty_sub_set = numpy.array(pred_pbty[row])
