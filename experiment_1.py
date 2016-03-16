@@ -11,13 +11,16 @@ import sklearn
 
 
 def experiment_1():
+    import warnings
+    warnings.filterwarnings("ignore")
+
     # Relative file paths to the .json file and .csv file.
     json_path = 'resources/train.json'
     # csv_paths = ['resources/multi_data_sets/letter.csv']
     csv_paths = [
         'resources/multi_data_sets/glass.csv',
         'resources/multi_data_sets/iris.csv',
-        'resources/multi_data_sets/letter.csv',
+        # 'resources/multi_data_sets/letter.csv',
         'resources/multi_data_sets/segment.csv',
         'resources/multi_data_sets/splice.csv',
         'resources/multi_data_sets/vehicle.csv',

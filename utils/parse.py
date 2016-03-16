@@ -54,6 +54,10 @@ def parse_csv(relative_file_path):
 
     class_set = csv_data.as_matrix(columns = csv_data.columns[-1:])
     class_set = numpy.array(class_set)
+    try:
+        class_set = class_set.astype(numpy.float)
+    except:
+        pass
 
     feature_set = csv_data.as_matrix(columns = csv_data.columns[:-1])
     feature_set = numpy.array(feature_set).astype('float')

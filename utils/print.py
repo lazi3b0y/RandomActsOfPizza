@@ -58,13 +58,12 @@ def print_statistics(avg_accuracy, avg_precision, avg_recall, avg_auc, avg_train
 
 
 def print_wilcoxon(predictions):
-    print("\n")
-    print("##############################################")
+    print("############################################################################")
     print("Wilcoxon Result for Decision Tree: ")
     print(wilcoxon(x = predictions['custom_decision_tree'], y = predictions['sklearn_decision_tree']))
     print("Wilcoxon Result for Random Forest: ")
     print(wilcoxon(x = predictions['custom_random_forest'], y = predictions['sklearn_random_forest']))
-    print("##############################################")
+    print("############################################################################\n\n")
 
 
 def print_clf_parameters(max_depth, min_samples_leaf, n_estimators, n_neighbors, leaf_size):
@@ -78,7 +77,6 @@ def print_clf_parameters(max_depth, min_samples_leaf, n_estimators, n_neighbors,
     print("Leaf size:\t\t\t\t{}".format(leaf_size))
 
 def print_current_data_set(path):
-    print("##############################")
-    print("\tCurrent data set")
-    print("##############################")
-    print(path)
+    print("############################################################################")
+    print("\tData set: {}".format(path))
+    print("############################################################################")
