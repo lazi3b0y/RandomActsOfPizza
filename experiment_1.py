@@ -13,10 +13,10 @@ import sklearn
 def experiment_1():
     # Relative file paths to the .json file and .csv file.
     json_path = 'resources/train.json'
-    csv_path = 'resources/multi_data_sets/iris.csv'
+    csv_path = 'resources/multi_data_sets/vehicle.csv'
 
     # Check if the current data set is binary or multi to
-    # know what kid of average should be used with some of
+    # know what value average should have with some of
     # the sklearn.metric methods later on.
     index = csv_path.find('binary_data_set')
     if index >= 0:  # If the string 'binary_data_set' is found in the current path to the .csv file.
@@ -64,17 +64,28 @@ def experiment_1():
                                                    min_samples_leaf = min_samples_leaf,
                                                    max_features = max_features)
 
+    # A dictionary containing our classifiers that were initialized before.
     classifiers = {
         "custom_decision_tree": custom_decision_tree,
         "custom_random_forest": custom_random_forest,
         "sklearn_decision_tree": sklearn_decision_tree,
-        "sklearn_random_forest": sklearn_random_forest
+        "sklearn_random_forest": sklearn_random_forest,
     }
 
-    # This performs our 10x10 Fold Cross Validation.
+    # Initialization of the dictionary where our predictions will be stored.
+    predictions = {
+        "custom_decision_tree": list(),
+        "custom_random_forest": list(),
+        "sklearn_decision_tree": list(),
+        "sklearn_random_forest": list(),
+    }
+
+    # The 10x10 Fold Cross Validation, divides the data set into training set and test set.
+    # In our case we'll end up with a test set that 1/10 of the total data and a train set
+    # thats 9/10 of the total data. Atleast as long as n_folds = 10.
     cross_val = sklearn.cross_validation.KFold(n = n_elements,
                                                n_folds = n_folds)
-    predictions = {}
+
     for key, classifier in classifiers.items():
         result = list()
         pred_pbty = list()
@@ -94,33 +105,20 @@ def experiment_1():
             test_class_set = class_set[test]
 
             start = time()
-            classifier.fit(train_feature_set, train_class_set.ravel())
+            classifier.fit(numpy.array(train_feature_set), numpy.array(train_class_set.ravel()))
 
             avg_train_time += time() - start
 
             start = time()
-            prediction = classifier.predict(test_feature_set)
-            pred_pbty.append(classifier.predict_proba(test_feature_set))
+            prediction = classifier.predict(numpy.array(test_feature_set))
+            pred_pbty.append(classifier.predict_proba(numpy.array(test_feature_set)))
             avg_test_time += time() - start
 
-            true_set = numpy.array([c[0] for c in test_class_set])
-            pred_set = numpy.array([p for p in prediction])
+            test_class_set = test_class_set.astype('float')
+            prediction = prediction.astype('float')
 
-            uniq_values = numpy.unique(numpy.concatenate((true_set, pred_set)))
+            result.append([test_class_set, prediction])
 
-            for i in range(test_class_set.shape[0]):
-                for j in range(uniq_values.shape[0]):
-                    if test_class_set[i] == uniq_values[j]:
-                        true_set[i] = j
-                    if prediction[i] == uniq_values[j]:
-                        pred_set[i] = j
-
-            true_set = true_set.astype('float32')
-            pred_set = pred_set.astype('float32')
-
-            result.append([true_set, pred_set])
-
-        predictions[key] = list()
         for row in range(len(result)):
             avg_accuracy += sklearn.metrics.accuracy_score(result[row][0], result[row][1])
             predictions[key].append(sklearn.metrics.precision_score(result[row][0], result[row][1], average = average))
@@ -132,8 +130,8 @@ def experiment_1():
             maximized_pbty_sub_set = numpy.array([max(pbty_pair) for pbty_pair in pred_pbty_sub_set])
 
             if len(uniq_values) > 2:
-                for i in uniq_values:
-                    false_posi_rates, true_posi_rates, thresholds = sklearn.metrics.roc_curve(result[row][0], maximized_pbty_sub_set, int(i))
+                for value in uniq_values:
+                    false_posi_rates, true_posi_rates, thresholds = sklearn.metrics.roc_curve(result[row][0], maximized_pbty_sub_set, int(value))
                     avg_auc += sklearn.metrics.auc(false_posi_rates, true_posi_rates)
 
                 avg_auc /= uniq_values.size / 2.0

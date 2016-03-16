@@ -67,13 +67,12 @@ def print_wilcoxon(predictions):
     print("##############################################")
 
 
-def print_clf_parameters(max_depth, min_samples_leaf, n_estimators):
+def print_clf_parameters(max_depth, min_samples_leaf, n_estimators, n_neighbors, leaf_size):
     print("##############################")
     print("\tClassifier parameters")
     print("##############################")
-    print("{}".format("Max depth:"))
-    print("{}".format(max_depth))
-    print("{}".format("Min_sample_leaf:"))
-    print("{}".format(min_samples_leaf))
-    print("{}".format("Number of estimators:"))
-    print("{}".format(n_estimators))
+    print("Max depth:\t\t\t\t{}".format(max_depth))
+    print("Min_sample_leaf:\t\t{}".format(min_samples_leaf))
+    print("Number of estimators:\t{}".format(n_estimators))
+    print("Number of neighbors:\t{}".format(n_neighbors))
+    print("Leaf size:\t\t\t\t{}".format(leaf_size))

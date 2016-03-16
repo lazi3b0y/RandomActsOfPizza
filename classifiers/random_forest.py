@@ -18,10 +18,13 @@ class RandomForest:
         self.bagging = 0
         self.sample_size = sample_size
 
+        self.n_classes = None
+        self.classType = None
+
     def fit(self, x, y):
         self.classType = y.dtype
         self.n_classes = numpy.unique(y)
-        if self.sample_size == None:
+        if self.sample_size is None:
             self.sample_size = x.shape[0] / self.n_estimators
 
         random_samples = numpy.zeros((self.n_estimators, self.sample_size, x.shape[1]), 'float64')
