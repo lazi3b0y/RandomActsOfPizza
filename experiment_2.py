@@ -14,7 +14,7 @@ __author__ = "Simon & Oskar"
 
 def experiment_2a():
     data_sets = [
-        # "resources/multi_data_sets/iris.csv",
+        "resources/multi_data_sets/iris.csv",
         "resources/multi_data_sets/glass.csv",
         "resources/multi_data_sets/vehicle.csv",
         "resources/multi_data_sets/segment.csv",
@@ -129,8 +129,8 @@ def experiment_2a():
 
                         prediction = classifier.predict(test_feature_set)
 
-                        test_class_set = test_class_set.astype('float')
-                        prediction = prediction.astype('float')
+                        test_class_set = test_class_set.astype(numpy.float)
+                        prediction = prediction.astype(numpy.float)
 
                         result.append([test_class_set, prediction])
 

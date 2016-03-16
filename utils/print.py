@@ -76,3 +76,9 @@ def print_clf_parameters(max_depth, min_samples_leaf, n_estimators, n_neighbors,
     print("Number of estimators:\t{}".format(n_estimators))
     print("Number of neighbors:\t{}".format(n_neighbors))
     print("Leaf size:\t\t\t\t{}".format(leaf_size))
+
+def print_current_data_set(path):
+    print("##############################")
+    print("\tCurrent data set")
+    print("##############################")
+    print(path)
