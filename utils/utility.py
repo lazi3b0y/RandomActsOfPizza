@@ -16,7 +16,7 @@ def convert_strings_to_numeric(string_set):
                 a[i] = j
                 break
 
-    a = numpy.array(a).astype(numpy.float)
+    a = a.astype(numpy.float)
 
     return a.reshape((len(a), 1))
 

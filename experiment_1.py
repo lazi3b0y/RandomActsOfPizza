@@ -142,13 +142,14 @@ def experiment_1():
                 test_class_set = class_set[test]
 
                 start = time()
-                classifier.fit(numpy.array(train_feature_set), numpy.array(train_class_set.ravel()))
+                classifier.fit(X = train_feature_set,
+                               y = train_class_set.ravel())
 
                 avg_train_time += time() - start
 
                 start = time()
-                prediction = classifier.predict(numpy.array(test_feature_set))
-                pred_pbty.append(classifier.predict_proba(numpy.array(test_feature_set)))
+                prediction = classifier.predict(test_feature_set)
+                pred_pbty.append(classifier.predict_proba(test_feature_set))
                 avg_test_time += time() - start
 
                 result.append([test_class_set.ravel(), prediction])

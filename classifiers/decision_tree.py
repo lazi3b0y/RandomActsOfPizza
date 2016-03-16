@@ -17,30 +17,30 @@ class DecisionTree:
         self.right_child = None
         self.n_classes = None
 
-    # x = rows of post stats
+    # X = rows of post stats
     # y = set of classes, i.e. if a post recieved a pizza or not.
-    def fit(self, x, y):
+    def fit(self, X, y):
         if self.n_classes is None:
             self.n_classes = unique(y)
 
         if self.max_depth is not None and self.max_depth == 0:
             return y
 
-        if len(x) <= self.min_samples_leaf:
+        if len(X) <= self.min_samples_leaf:
             return y
 
         if unique(y).size == 1:
             return y
 
-        splits = array(self.split(x, y))
+        splits = array(self.split(X, y))
 
         if splits.size <= 0:
             return y
 
         i = argmin(splits[:, 2])
         self.value = splits[i]
-        left_split = x[:, self.value[0]] <= self.value[1]
-        right_split = x[:, self.value[0]] > self.value[1]
+        left_split = X[:, self.value[0]] <= self.value[1]
+        right_split = X[:, self.value[0]] > self.value[1]
 
         left_child_tree = DecisionTree(min_samples_leaf=self.min_samples_leaf,
                                        max_depth=self.max_depth - 1 if self.max_depth is not None else self.max_depth,
@@ -50,17 +50,17 @@ class DecisionTree:
                                         max_depth=self.max_depth - 1 if self.max_depth is not None else self.max_depth,
                                         max_features=self.max_features)
 
-        self.left_child = left_child_tree.fit(x[left_split],
+        self.left_child = left_child_tree.fit(X[left_split],
                                               y[left_split])
 
-        self.right_child = right_child_tree.fit(x[right_split],
+        self.right_child = right_child_tree.fit(X[right_split],
                                                 y[right_split])
 
         return self
 
-    def predict(self, x):  # classify objects
+    def predict(self, X):  # classify objects
         result = list()
-        for row in x:
+        for row in X:
             current_node = self
             while True:
                 if isinstance(current_node, DecisionTree):
@@ -74,9 +74,9 @@ class DecisionTree:
                     break
         return array(result)
 
-    def predict_proba(self, x):  # class probability estimation
+    def predict_proba(self, X):  # class probability estimation
         result = list()
-        for row in x:
+        for row in X:
             current_node = self
             while True:
                 if isinstance(current_node, DecisionTree):
@@ -100,10 +100,10 @@ class DecisionTree:
         depth = 0
         print_tree(self, depth)
 
-    def split(self, x, y):
+    def split(self, X, y):
         s = list()
-        for i in range(x.shape[1]):
-            feature_data = x[:, i]
+        for i in range(X.shape[1]):
+            feature_data = X[:, i]
             unique_data = unique(feature_data)
             unique_data = delete(unique_data, arange(unique_data.size, 1.2))
             for split_index in unique_data:
@@ -118,7 +118,7 @@ class DecisionTree:
                     break
         return s
 
-    def gini(self, x, y):
+    def gini(self, X, y):
         uniq_values = unique(y)
         result = 0
         for value in uniq_values:
@@ -136,10 +136,10 @@ class DecisionTree:
             right_nodes.size) / precords) * self.gini(right_nodes, y[1])
 
     @staticmethod
-    def laplace(x):
+    def laplace(X):
         result = []
-        uniq_classes = unique(x)
+        uniq_classes = unique(X)
         for c in uniq_classes:
-            t = x[x == c]
-            result.append(float(t.shape[0] + 1) / float(x.shape[0] + uniq_classes.shape[0]))
+            t = X[X == c]
+            result.append(float(t.shape[0] + 1) / float(X.shape[0] + uniq_classes.shape[0]))
         return result

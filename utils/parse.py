@@ -10,27 +10,31 @@ __author__ = 'Simon & Oskar'
 
 
 def parse_json(json_path, csv_save_path):
-    fields = ['requester_account_age_in_days_at_request',
-              'requester_days_since_first_post_on_raop_at_request',
-              'requester_number_of_posts_on_raop_at_request',
-              'requester_number_of_posts_at_request',
-              'requester_number_of_comments_at_request',
-              'requester_number_of_comments_in_raop_at_request',
-              'requester_number_of_subreddits_at_request',
-              'requester_upvotes_minus_downvotes_at_request',
-              'unix_timestamp_of_request',
-              'requester_received_pizza']
+    fields = [
+        'requester_account_age_in_days_at_request',
+        'requester_days_since_first_post_on_raop_at_request',
+        'requester_number_of_posts_on_raop_at_request',
+        'requester_number_of_posts_at_request',
+        'requester_number_of_comments_at_request',
+        'requester_number_of_comments_in_raop_at_request',
+        'requester_number_of_subreddits_at_request',
+        'requester_upvotes_minus_downvotes_at_request',
+        'unix_timestamp_of_request',
+        'requester_received_pizza'
+    ]
 
-    features = ['acc_age',
-                'days_since_first_roap_post',
-                'n_posts_on_roap',
-                'n_posts_total',
-                'n_comments_total',
-                'n_comments_in_roap',
-                'n_subreddits',
-                'upvotes_minus_downvotes',
-                'time_stamp',
-                'received_pizza']
+    features = [
+        'acc_age',
+        'days_since_first_roap_post',
+        'n_posts_on_roap',
+        'n_posts_total',
+        'n_comments_total',
+        'n_comments_in_roap',
+        'n_subreddits',
+        'upvotes_minus_downvotes',
+        'time_stamp',
+        'received_pizza'
+    ]
 
     script_path = os.path.dirname(__file__)
     json_file_path = os.path.join(script_path, json_path)
