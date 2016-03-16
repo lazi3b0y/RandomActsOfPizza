@@ -90,7 +90,7 @@ def print_clf_acc_table(hori_values, vert_values, values):
         print("{0:>5d}\t\t".format(i), end="")
     print("")
     for i in range(len(vert_values)):
-        print("{0:>5d}\t".format(i), end="")
+        print("{0:>5d}\t".format(vert_values[i]), end="")
         for j in range(len(values[i])):
             print("{0:5f}\t".format(values[i][j]), end="")
         print("")

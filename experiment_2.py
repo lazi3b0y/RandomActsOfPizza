@@ -5,7 +5,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from utils.print import print_clf_parameters, print_clf_acc_table
 from utils.parse import parse_csv
-from time import time
 
 import numpy
 import sklearn
