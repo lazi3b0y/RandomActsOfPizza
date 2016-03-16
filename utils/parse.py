@@ -60,7 +60,6 @@ def parse_csv(relative_file_path):
         pass
 
     feature_set = csv_data.as_matrix(columns = csv_data.columns[:-1])
-    feature_set = numpy.array(feature_set).astype('float')
-    # feature_set = numpy.around(feature_set, decimals = 8)
+    feature_set = numpy.array(feature_set).astype(numpy.float)
 
     return class_set, feature_set
