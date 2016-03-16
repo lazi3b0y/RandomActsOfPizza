@@ -2,7 +2,9 @@ import json
 import pandas
 import numpy
 import os
-from utils.utility import convert_strings_to_numeric
+
+from sklearn.utils.fixes import array_equal
+from utils.utility import convert_strings_to_numeric, convert_to_binary_numbers
 
 __author__ = 'Simon & Oskar'
 
@@ -56,10 +58,16 @@ def parse_csv(relative_file_path):
     class_set = csv_data.as_matrix(columns = csv_data.columns[-1:])
     class_set = numpy.array(class_set)
 
+    # Convert the classes to floats
     try:
         class_set = class_set.astype(numpy.float)
     except ValueError:
         class_set = convert_strings_to_numeric(class_set)
+
+    # Correct binary classes to match [0, 1]
+    classes = numpy.unique(class_set)
+    if len(classes) is 2 and not array_equal(classes, [0, 1]):
+        class_set = convert_to_binary_numbers(class_set, classes[0])
 
     feature_set = csv_data.as_matrix(columns = csv_data.columns[:-1])
     feature_set = numpy.array(feature_set).astype(numpy.float)

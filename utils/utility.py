@@ -19,3 +19,12 @@ def convert_strings_to_numeric(string_set):
     a = numpy.array(a).astype(numpy.float)
 
     return a.reshape((len(a), 1))
+
+
+def convert_to_binary_numbers(class_set, diff):
+    class_set = class_set.ravel()
+
+    for i in range(class_set.shape[0]):
+        class_set[i] = class_set[i] - diff
+
+    return class_set.reshape((len(class_set), 1))
