@@ -98,7 +98,7 @@ def experiment_2a():
 
         for i in range(len(value_matrix_1)):
             for j in range(len(value_matrix_2)):
-                # Prints the current parameters for our classifiers (Decision Trees and Random Forests).
+                # Prints the current parameters for our classifiers (Decision Trees/Random Forests/KNeighbors).
                 print_clf_parameters(max_depth = value_matrix_1[i],
                                      min_samples_leaf = min_samples_leaf,
                                      n_estimators = value_matrix_2[j],
