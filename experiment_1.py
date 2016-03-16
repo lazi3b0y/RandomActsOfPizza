@@ -14,7 +14,7 @@ import sklearn
 def experiment_1():
     # Relative file paths to the .json file and .csv file.
     json_path = 'resources/train.json'
-    # csv_paths = ["resources/binary_data_sets/haberman.csv"]
+    csv_paths = ["resources/binary_data_sets/labor.csv"]
 
     # csv_paths = [
     #     'resources/multi_data_sets/letter.csv',
@@ -26,28 +26,28 @@ def experiment_1():
     #     'resources/multi_data_sets/waveform-5000.csv',
     # ]
 
-    csv_paths = [
-        "resources/binary_data_sets/balance-scale.csv",
-        "resources/binary_data_sets/breast-cancer.csv",
-        "resources/binary_data_sets/breast-w.csv",
-        "resources/binary_data_sets/credit-a.csv",
-        "resources/binary_data_sets/credit-g.csv",
-        "resources/binary_data_sets/diabetes.csv",
-        "resources/binary_data_sets/haberman.csv",
-        "resources/binary_data_sets/heart-c.csv",
-        "resources/binary_data_sets/heart-h.csv",
-        "resources/binary_data_sets/heart-s.csv",
-        "resources/binary_data_sets/hepatitis.csv",
-        "resources/binary_data_sets/ionosphere.csv",
-        "resources/binary_data_sets/kr-vs-kp.csv",
-        "resources/binary_data_sets/labor.csv",
-        "resources/binary_data_sets/liver-disorders.csv",
-        "resources/binary_data_sets/mushroom.csv",
-        "resources/binary_data_sets/sick.csv",
-        "resources/binary_data_sets/sonar.csv",
-        "resources/binary_data_sets/spambase.csv",
-        "resources/binary_data_sets/tic-tac-toe.csv",
-    ]
+    # csv_paths = [
+    #     "resources/binary_data_sets/balance-scale.csv",
+    #     "resources/binary_data_sets/breast-cancer.csv",
+    #     "resources/binary_data_sets/breast-w.csv",
+    #     "resources/binary_data_sets/credit-a.csv",
+    #     "resources/binary_data_sets/credit-g.csv",
+    #     "resources/binary_data_sets/diabetes.csv",
+    #     "resources/binary_data_sets/haberman.csv",
+    #     "resources/binary_data_sets/heart-c.csv",
+    #     "resources/binary_data_sets/heart-h.csv",
+    #     "resources/binary_data_sets/heart-s.csv",
+    #     "resources/binary_data_sets/hepatitis.csv",
+    #     "resources/binary_data_sets/ionosphere.csv",
+    #     "resources/binary_data_sets/kr-vs-kp.csv",
+    #     "resources/binary_data_sets/labor.csv",
+    #     "resources/binary_data_sets/liver-disorders.csv",
+    #     "resources/binary_data_sets/mushroom.csv",
+    #     "resources/binary_data_sets/sick.csv",
+    #     "resources/binary_data_sets/sonar.csv",
+    #     "resources/binary_data_sets/spambase.csv",
+    #     "resources/binary_data_sets/tic-tac-toe.csv",
+    # ]
 
     # Load and parse the json file, then save the parsed data
     # to a .csv file for later use. If raop.csv already exists

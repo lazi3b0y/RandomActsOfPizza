@@ -75,10 +75,22 @@ def print_clf_parameters(max_depth, min_samples_leaf, n_estimators, n_neighbors,
     print("Min_sample_leaf:\t\t{}".format(min_samples_leaf))
     print("Number of estimators:\t{}".format(n_estimators))
     print("Number of neighbors:\t{}".format(n_neighbors))
-    print("Leaf size:\t\t\t\t{}".format(leaf_size))
+    print("Leaf size:\t\t\t\t{}\n".format(leaf_size))
 
 
 def print_current_data_set(path):
     print("############################################################################")
     print("\tData set: {}".format(path))
     print("############################################################################")
+
+
+def print_clf_acc_table(hori_values, vert_values, values):
+    print("\t\t", end="")
+    for i in hori_values:
+        print("{0:>5d}\t\t".format(i), end="")
+    print("")
+    for i in range(len(vert_values)):
+        print("{0:>5d}\t".format(i), end="")
+        for j in range(len(values[i])):
+            print("{0:5f}\t".format(values[i][j]), end="")
+        print("")
