@@ -72,7 +72,7 @@ def print_clf_parameters(max_depth, min_samples_leaf, n_estimators, n_neighbors,
     print("\tClassifier parameters")
     print("##############################")
     print("Max depth:\t\t\t\t{}".format(max_depth))
-    print("Min_sample_leaf:\t\t{}".format(min_samples_leaf))
+    print("Minimum Samples Leaf:\t\t{}".format(min_samples_leaf))
     print("Number of estimators:\t{}".format(n_estimators))
     print("Number of neighbors:\t{}".format(n_neighbors))
     print("Leaf size:\t\t\t\t{}\n".format(leaf_size))

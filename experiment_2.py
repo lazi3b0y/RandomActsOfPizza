@@ -5,6 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from utils.print import print_clf_parameters, print_clf_acc_table
 from utils.parse import parse_csv
+from scipy.stats import wilcoxon
 
 import numpy
 import sklearn
@@ -28,14 +29,16 @@ def experiment_2():
     ]
 
     classifiers = {
-        "custom_decision_tree": None,
+        # "custom_decision_tree": None,
         "custom_random_forest": None,
-        "sklearn_decision_tree": None,
+        # "sklearn_decision_tree": None,
         "sklearn_random_forest": None,
-        "sklearn_neighbors": None,
+        # "sklearn_neighbors": None,
     }
 
-    value_matrix = [v for v in range(5, 81, 5)]
+
+
+    value_matrix = [v for v in range(5, 51, 5)]
     results = numpy.zeros((len(value_matrix), len(value_matrix)))
 
     # The actual experiment begins here.
@@ -56,7 +59,7 @@ def experiment_2():
             for j in range(len(value_matrix)):
                 # Prints the current parameters for our classifiers (Decision Trees/Random Forests/KNeighbors).
                 print_clf_parameters(max_depth = value_matrix[i],
-                                     min_samples_leaf = 1,
+                                     min_samples_leaf = value_matrix[j],
                                      n_estimators = value_matrix[j],
                                      n_neighbors = value_matrix[i],
                                      leaf_size = value_matrix[j])
@@ -93,6 +96,7 @@ def experiment_2():
 
                     for r1 in range(len(result)):
                         avg_accuracy += sklearn.metrics.accuracy_score(result[r1][0], result[r1][1])
+
 
                     avg_accuracy /= float(len(result))
                     results[i][j] += avg_accuracy / len(optimization_sets) / len(classifiers)
