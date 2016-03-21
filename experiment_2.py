@@ -28,16 +28,15 @@ def experiment_2():
     ]
 
     classifiers = {
-        # "custom_decision_tree": None,
+        "custom_decision_tree": None,
         "custom_random_forest": None,
-        # "sklearn_decision_tree": None,
-        # "sklearn_random_forest": None,
-        # "sklearn_neighbors": None,
+        "sklearn_decision_tree": None,
+        "sklearn_random_forest": None,
+        "sklearn_neighbors": None,
     }
 
-    value_matrix_1 = [v for v in range(5, 51, 5)]
-    value_matrix_2 = [v for v in range(30, 101, 10)]
-    results = numpy.zeros((len(value_matrix_1), len(value_matrix_2)))
+    value_matrix = [v for v in range(5, 81, 5)]
+    results = numpy.zeros((len(value_matrix), len(value_matrix)))
 
     # The actual experiment begins here.
     for optimization_set in optimization_sets:
@@ -47,28 +46,26 @@ def experiment_2():
         n_folds = 10
         n_elements = feature_set.shape[0]
 
-        # The 10x10 Fold Cross Validation, divides the data set into training set and test set.
-        # In our case we'll end up with a test set that 1/10 of the total data and a train set
-        # thats 9/10 of the total data. Atleast as long as n_folds = 10.
+        # The 10x10 Fold Cross Validation.
         cross_val = sklearn.cross_validation.KFold(n = n_elements,
                                                    n_folds = n_folds)
 
         print("Current data set:\t{}".format(optimization_set))
 
-        for i in range(len(value_matrix_1)):
-            for j in range(len(value_matrix_2)):
+        for i in range(len(value_matrix)):
+            for j in range(len(value_matrix)):
                 # Prints the current parameters for our classifiers (Decision Trees/Random Forests/KNeighbors).
-                print_clf_parameters(max_depth = value_matrix_1[i],
+                print_clf_parameters(max_depth = value_matrix[i],
                                      min_samples_leaf = 1,
-                                     n_estimators = value_matrix_2[j],
-                                     n_neighbors = value_matrix_1[i],
-                                     leaf_size = value_matrix_2[j])
+                                     n_estimators = value_matrix[j],
+                                     n_neighbors = value_matrix[i],
+                                     leaf_size = value_matrix[j])
 
-                classifiers["custom_random_forest"] = RandomForest(n_estimators = value_matrix_2[j],
-                                                                   max_depth = value_matrix_1[i])
+                classifiers["custom_random_forest"] = RandomForest(n_estimators = value_matrix[j],
+                                                                   max_depth = value_matrix[i])
 
-                # classifiers["sklearn_random_forest"] = RandomForestClassifier(n_estimators = value_matrix_2[j],
-                #                                                               max_depth = value_matrix_1[i])
+                classifiers["sklearn_random_forest"] = RandomForestClassifier(n_estimators = value_matrix[j],
+                                                                              max_depth = value_matrix[i])
 
                 # classifiers["sklearn_neighbors"] = KNeighborsClassifier(n_neighbors = value_matrix_1[i],
                 #                                                         leaf_size = value_matrix_2[j])
@@ -100,7 +97,7 @@ def experiment_2():
                     avg_accuracy /= float(len(result))
                     results[i][j] += avg_accuracy / len(optimization_sets) / len(classifiers)
 
-    print_clf_acc_table(value_matrix_2, value_matrix_1, results)
+    print_clf_acc_table(value_matrix, value_matrix, results)
 
 if __name__ == "__main__":
     experiment_2()
