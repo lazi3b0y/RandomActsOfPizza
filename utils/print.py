@@ -74,7 +74,7 @@ def print_clf_parameters(max_depth, min_samples_leaf, n_estimators, n_neighbors,
     print("\tClassifier parameters")
     print("##############################")
     print("Max depth:\t\t\t\t{}".format(max_depth))
-    print("Minimum Samples Leaf:\t\t{}".format(min_samples_leaf))
+    print("Minimum Samples Leaf:\t{}".format(min_samples_leaf))
     print("Number of estimators:\t{}".format(n_estimators))
     print("Number of neighbors:\t{}".format(n_neighbors))
     print("Leaf size:\t\t\t\t{}\n".format(leaf_size))
@@ -86,7 +86,8 @@ def print_current_data_set(path):
     print("############################################################################")
 
 
-def print_clf_acc_table(hori_values, vert_values, values):
+def print_clf_acc_table(hori_label, hori_values, vert_values, values):
+    print("\t\t{}".format(hori_label))
     print("\t\t", end="")
     for i in hori_values:
         print("{0:>5d}\t\t".format(i), end="")

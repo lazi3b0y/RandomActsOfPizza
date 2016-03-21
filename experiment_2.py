@@ -18,17 +18,17 @@ def experiment_2_optimization():
         "resources/binary_data_sets/balance-scale.csv",
         "resources/binary_data_sets/breast-cancer.csv",
         "resources/binary_data_sets/diabetes.csv",
-        "resources/multi_data_sets/glass.csv",
-        "resources/multi_data_sets/iris.csv",
-        "resources/multi_data_sets/splice.csv",
+        # "resources/multi_data_sets/glass.csv",
+        # "resources/multi_data_sets/iris.csv",
+        # "resources/multi_data_sets/splice.csv",
     ]
 
     classifiers = {
         # "custom_decision_tree": None,
-        "custom_random_forest": None,
+        # "custom_random_forest": None,
         # "sklearn_decision_tree": None,
-        "sklearn_random_forest": None,
-        # "sklearn_neighbors": None,
+        # "sklearn_random_forest": None,
+        "sklearn_neighbors": None,
     }
 
     value_matrix = [v for v in range(5, 51, 5)]
@@ -49,7 +49,7 @@ def experiment_2_optimization():
         print("Current data set:\t{}".format(optimization_set))
 
         for i in range(len(value_matrix)):
-            for j in range(len(value_matrix)):
+            for j in range(len(value_matrix)):  # Horizontal values in our table
                 # Prints the current parameters for our classifiers (Decision Trees/Random Forests/KNeighbors).
                 print_clf_parameters(max_depth = value_matrix[i],
                                      min_samples_leaf = value_matrix[j],
@@ -57,14 +57,14 @@ def experiment_2_optimization():
                                      n_neighbors = value_matrix[i],
                                      leaf_size = value_matrix[j])
 
-                classifiers["custom_random_forest"] = RandomForest(n_estimators = value_matrix[j],
-                                                                   max_depth = value_matrix[i])
+                # classifiers["custom_random_forest"] = RandomForest(n_estimators = value_matrix[j],
+                #                                                    max_depth = value_matrix[i])
+                #
+                # classifiers["sklearn_random_forest"] = RandomForestClassifier(n_estimators = value_matrix[j],
+                #                                                               max_depth = value_matrix[i])
 
-                classifiers["sklearn_random_forest"] = RandomForestClassifier(n_estimators = value_matrix[j],
-                                                                              max_depth = value_matrix[i])
-
-                # classifiers["sklearn_neighbors"] = KNeighborsClassifier(n_neighbors = value_matrix_1[i],
-                #                                                         leaf_size = value_matrix_2[j])
+                classifiers["sklearn_neighbors"] = KNeighborsClassifier(n_neighbors = value_matrix[i],
+                                                                        leaf_size = value_matrix[j])
 
                 for key, classifier in classifiers.items():
                     result = list()
@@ -93,7 +93,7 @@ def experiment_2_optimization():
                     avg_accuracy /= float(len(result))
                     results[i][j] += avg_accuracy / len(optimization_sets) / len(classifiers)
 
-    print_clf_acc_table(value_matrix, value_matrix, results)
+    print_clf_acc_table("leaf_size", value_matrix, value_matrix, results)
 
 
 def experiment_2_testing():
