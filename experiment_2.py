@@ -59,18 +59,18 @@ def experiment_2_optimization():
 
                 # classifiers["custom_random_forest"] = RandomForest(n_estimators = value_matrix[j],
                 #                                                    max_depth = value_matrix[i])
-                #
+
                 # classifiers["sklearn_random_forest"] = RandomForestClassifier(n_estimators = value_matrix[j],
                 #                                                               max_depth = value_matrix[i])
 
-                #classifiers["sklearn_decision_tree"] = DecisionTreeClassifier(n_neighbors = value_matrix[i],
+                # classifiers["sklearn_decision_tree"] = DecisionTreeClassifier(n_neighbors = value_matrix[i],
                 #                                                        leaf_size = value_matrix[j])
 
-                #classifiers["custom_decision_tree"] = DecisionTree(n_neighbors = value_matrix[i],
+                # classifiers["custom_decision_tree"] = DecisionTree(n_neighbors = value_matrix[i],
                 #                                                        leaf_size = value_matrix[j])
 
-                classifiers["sklearn_neighbors"] = KNeighborsClassifier(n_neighbors = value_matrix[i],
-                                                                        leaf_size = value_matrix[j])
+                # classifiers["sklearn_neighbors"] = KNeighborsClassifier(n_neighbors = value_matrix[i],
+                #                                                         leaf_size = value_matrix[j])
 
                 for key, classifier in classifiers.items():
                     result = list()
