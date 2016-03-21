@@ -28,7 +28,7 @@ def experiment_2_optimization():
         # "custom_random_forest": None,
         # "sklearn_decision_tree": None,
         # "sklearn_random_forest": None,
-        "sklearn_neighbors": None,
+        # "sklearn_neighbors": None,
     }
 
     value_matrix = [v for v in range(5, 51, 5)]
