@@ -18,17 +18,17 @@ def experiment_2_optimization():
         "resources/binary_data_sets/balance-scale.csv",
         "resources/binary_data_sets/breast-cancer.csv",
         "resources/binary_data_sets/diabetes.csv",
-        "resources/multi_data_sets/glass.csv",
-        "resources/multi_data_sets/iris.csv",
-        "resources/multi_data_sets/splice.csv",
+        # "resources/multi_data_sets/glass.csv",
+        # "resources/multi_data_sets/iris.csv",
+        # "resources/multi_data_sets/splice.csv",
     ]
 
     classifiers = {
         # "custom_decision_tree": None,
+        # "custom_random_forest": None,
         # "sklearn_decision_tree": None,
-        "custom_random_forest": None,
-        "sklearn_random_forest": None,
-        # "sklearn_neighbors": None,
+        # "sklearn_random_forest": None,
+        "sklearn_neighbors": None,
     }
 
     value_matrix = [v for v in range(5, 51, 5)]
@@ -57,14 +57,20 @@ def experiment_2_optimization():
                                      n_neighbors = value_matrix[i],
                                      leaf_size = value_matrix[j])
 
-                classifiers["custom_random_forest"] = RandomForest(n_estimators = value_matrix[j],
-                                                                   max_depth = value_matrix[i])
+                # classifiers["custom_random_forest"] = RandomForest(n_estimators = value_matrix[j],
+                #                                                    max_depth = value_matrix[i])
+                #
+                # classifiers["sklearn_random_forest"] = RandomForestClassifier(n_estimators = value_matrix[j],
+                #                                                               max_depth = value_matrix[i])
 
-                classifiers["sklearn_random_forest"] = RandomForestClassifier(n_estimators = value_matrix[j],
-                                                                              max_depth = value_matrix[i])
+                #classifiers["sklearn_decision_tree"] = DecisionTreeClassifier(n_neighbors = value_matrix[i],
+                #                                                        leaf_size = value_matrix[j])
 
-                # classifiers["sklearn_neighbors"] = KNeighborsClassifier(n_neighbors = value_matrix[j],
-                #                                                         leaf_size = value_matrix[i])
+                #classifiers["custom_decision_tree"] = DecisionTree(n_neighbors = value_matrix[i],
+                #                                                        leaf_size = value_matrix[j])
+
+                classifiers["sklearn_neighbors"] = KNeighborsClassifier(n_neighbors = value_matrix[i],
+                                                                        leaf_size = value_matrix[j])
 
                 for key, classifier in classifiers.items():
                     result = list()
@@ -107,8 +113,8 @@ def experiment_2_testing():
 
     classifiers = {
         "custom_decision_tree": None,
-        "sklearn_decision_tree": None,
         "custom_random_forest": None,
+        "sklearn_decision_tree": None,
         "sklearn_random_forest": None,
         "sklearn_neighbors": None,
     }
