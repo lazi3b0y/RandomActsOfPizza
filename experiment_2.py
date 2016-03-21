@@ -69,8 +69,8 @@ def experiment_2_optimization():
                 # classifiers["custom_decision_tree"] = DecisionTree(n_neighbors = value_matrix[i],
                 #                                                        leaf_size = value_matrix[j])
 
-                # classifiers["sklearn_neighbors"] = KNeighborsClassifier(n_neighbors = value_matrix[i],
-                #                                                         leaf_size = value_matrix[j])
+                # classifiers["sklearn_neighbors"] = KNeighborsClassifier(n_neighbors = value_matrix[j],
+                #                                                         leaf_size = value_matrix[i])
 
                 for key, classifier in classifiers.items():
                     result = list()
