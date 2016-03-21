@@ -18,9 +18,9 @@ def experiment_2_optimization():
         "resources/binary_data_sets/balance-scale.csv",
         "resources/binary_data_sets/breast-cancer.csv",
         "resources/binary_data_sets/diabetes.csv",
-        # "resources/multi_data_sets/glass.csv",
-        # "resources/multi_data_sets/iris.csv",
-        # "resources/multi_data_sets/splice.csv",
+        "resources/multi_data_sets/glass.csv",
+        "resources/multi_data_sets/iris.csv",
+        "resources/multi_data_sets/splice.csv",
     ]
 
     classifiers = {
