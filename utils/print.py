@@ -87,7 +87,7 @@ def print_current_data_set(path):
 
 
 def print_clf_acc_table(hori_label, hori_values, vert_values, values):
-    print("\t\t{}".format(hori_label))
+    print("\t\t{}--->".format(hori_label))
     print("\t\t", end="")
     for i in hori_values:
         print("{0:>5d}\t\t".format(i), end="")

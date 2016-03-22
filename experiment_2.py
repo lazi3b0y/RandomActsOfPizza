@@ -54,20 +54,20 @@ def experiment_2_optimization():
                 print_clf_parameters(max_depth = value_matrix[i],
                                      min_samples_leaf = value_matrix[j],
                                      n_estimators = value_matrix[j],
-                                     n_neighbors = value_matrix[i],
-                                     leaf_size = value_matrix[j])
+                                     n_neighbors = value_matrix[j],
+                                     leaf_size = value_matrix[i])
 
                 # classifiers["custom_random_forest"] = RandomForest(n_estimators = value_matrix[j],
                 #                                                    max_depth = value_matrix[i])
-
+                #
                 # classifiers["sklearn_random_forest"] = RandomForestClassifier(n_estimators = value_matrix[j],
                 #                                                               max_depth = value_matrix[i])
 
-                # classifiers["sklearn_decision_tree"] = DecisionTreeClassifier(n_neighbors = value_matrix[i],
-                #                                                        leaf_size = value_matrix[j])
-
-                # classifiers["custom_decision_tree"] = DecisionTree(n_neighbors = value_matrix[i],
-                #                                                        leaf_size = value_matrix[j])
+                # classifiers["sklearn_decision_tree"] = DecisionTreeClassifier(min_samples_leaf = value_matrix[j],
+                #                                                               max_depth = value_matrix[i])
+                #
+                # classifiers["custom_decision_tree"] = DecisionTree(min_samples_leaf = value_matrix[j],
+                #                                                    max_depth = value_matrix[i])
 
                 # classifiers["sklearn_neighbors"] = KNeighborsClassifier(n_neighbors = value_matrix[j],
                 #                                                         leaf_size = value_matrix[i])
