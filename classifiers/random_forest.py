@@ -30,7 +30,7 @@ class RandomForest:
             self.sample_size = X.shape[0] / self.n_estimators
 
         rand_features = numpy.zeros(shape = (self.n_estimators, self.sample_size, X.shape[1]),
-                                     dtype = numpy.float)
+                                    dtype = numpy.float)
 
         rand_classes = numpy.zeros((self.n_estimators, self.sample_size))
 
