@@ -1,12 +1,13 @@
-import numpy
-from random import randrange
 from classifiers.decision_tree import DecisionTree
 from collections import Counter
+from utils.utility import pick_result
+from random import randrange
+
+import numpy
 
 __author__ = 'Simon & Oskar'
 
 
-# TODO: Rename variables, restructure code(?), comment code
 class RandomForest:
     def __init__(self, max_depth = None, min_samples_leaf = 1, n_estimators = 10, sample_size = 200, max_features = None):
         self.criterion = "gini"
@@ -19,45 +20,59 @@ class RandomForest:
         self.sample_size = sample_size
 
         self.n_classes = None
+        self.decision_trees = list()
 
     def fit(self, X, y):
-        self.n_classes = numpy.unique(y)
+        if self.n_classes is None:
+            self.n_classes = numpy.unique(y)
 
         if self.sample_size is None:
             self.sample_size = X.shape[0] / self.n_estimators
 
-        random_samples = numpy.zeros((self.n_estimators, self.sample_size, X.shape[1]), numpy.float)
-        random_samples_class = numpy.zeros((self.n_estimators, self.sample_size))
+        rand_features = numpy.zeros(shape = (self.n_estimators, self.sample_size, X.shape[1]),
+                                     dtype = numpy.float)
+
+        rand_classes = numpy.zeros((self.n_estimators, self.sample_size))
 
         for i in range(self.n_estimators):
-            temp = numpy.zeros((self.sample_size, X.shape[1]), numpy.float)
-            temp_class = numpy.zeros((self.sample_size), numpy.float)
+            temp = numpy.zeros(shape = (self.sample_size, X.shape[1]),
+                               dtype = numpy.float)
+
+            temp_class = numpy.zeros(shape = self.sample_size,
+                                     dtype = numpy.float)
+
             for j in range(self.sample_size):
-                r = randrange(0,X.shape[0])
+                r = randrange(0, X.shape[0])
                 temp[j] = X[r]
                 temp_class[j] = y[r]
-            random_samples[i] = temp
-            random_samples_class[i] = temp_class
 
-        self.trees = list()
+            rand_features[i] = temp
+            rand_classes[i] = temp_class
+
         for i in range(self.n_estimators):
-            tree = DecisionTree(max_features = self.max_features,
-                                max_depth = self.max_depth,
-                                min_samples_leaf = self.min_samples_leaf,
-                                laplace = self.laplace)
-            tree.fit(random_samples[i], random_samples_class[i])
-            self.trees.append(tree)
+            decision_tree = DecisionTree(max_features = self.max_features,
+                                         max_depth = self.max_depth,
+                                         min_samples_leaf = self.min_samples_leaf,
+                                         laplace = self.laplace)
+
+            decision_tree.fit(X = rand_features[i],
+                              y = rand_classes[i])
+
+            self.decision_trees.append(decision_tree)
 
     def predict(self, X):
         final_result = numpy.zeros((X.shape[0]))
 
         for row in range(X.shape[0]):
             result = numpy.zeros((self.n_estimators, 1))
+
             for i in range(self.n_estimators):
-                result[i] = self.trees[i].predict(numpy.array([X[row]]))
-            cn = [r[0] for r in result]
-            c = Counter(cn).most_common(numpy.unique(cn).size)
-            final_result[row] = self.pick_result(c)
+                result[i] = self.decision_trees[i].predict(numpy.array([X[row]]))
+
+            result_flattened = result.ravel()
+            c = Counter(result_flattened).most_common(numpy.unique(result_flattened).size)
+
+            final_result[row] = pick_result(c)
 
         return final_result
 
@@ -67,22 +82,10 @@ class RandomForest:
         for row in range(X.shape[0]):
             result = numpy.zeros((self.n_estimators, len(self.n_classes)), numpy.float)
             for i in range(self.n_estimators):
-                result[i] = self.trees[i].predict_proba(numpy.array([X[row]]))
+                result[i] = self.decision_trees[i].predict_proba(numpy.array([X[row]]))
             result.astype(numpy.float)
             for r in result:
                 for i in range(final_result.shape[1]):
                     final_result[row, i] += r[i].astype(numpy.float) / float(self.n_estimators)
 
         return final_result
-
-    @staticmethod
-    def pick_result(values):
-        if len(values) != 1:
-            equals = list()
-            equals.append(0)
-            for v in range(1, len(values)):
-                if values[0][1] == values[v][1]:
-                    equals.append(v)
-            return values[equals[randrange(0, len(equals))]][0]
-        else:
-            return values[0][0]

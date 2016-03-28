@@ -1,4 +1,5 @@
 from scipy.stats import binom
+from random import randrange
 
 import numpy
 
@@ -51,3 +52,15 @@ def mcnemar_midp(b, c):
     p = 2. * dist.cdf(x)
     midp = p - dist.pmf(x)
     return midp
+
+
+def pick_result(values):
+    if len(values) != 1:
+        eq = list()
+        eq.append(0)
+        for v in range(1, len(values)):
+            if values[0][1] == values[v][1]:
+                eq.append(v)
+        return values[eq[randrange(0, len(eq))]][0]
+    else:
+        return values[0][0]
