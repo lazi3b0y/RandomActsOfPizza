@@ -65,6 +65,7 @@ def print_wilcoxon(predictions):
     print(wilcoxon(x = predictions['custom_random_forest'],
                    y = predictions['sklearn_random_forest']))
     if predictions['sklearn_neighbors']:
+        print("Wilcoxon Result for Nearest Neighbors: ")
         print(wilcoxon(x = predictions['sklearn_neighbors']))
     print("############################################################################\n\n")
 
