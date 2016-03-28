@@ -3,7 +3,7 @@ from classifiers.random_forest import RandomForest
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from utils.print import print_clf_parameters, print_clf_acc_table, print_wilcoxon
+from utils.print import print_clf_parameters, print_clf_acc_table, print_wilcoxon, print_current_data_set
 from utils.parse import parse_csv
 from scipy.stats import wilcoxon
 
@@ -25,11 +25,11 @@ def experiment_2_optimization():
 
     classifiers = {}
 
-    value_matrix = [v for v in range(5, 51, 5)]
+    value_matrix = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
     results = numpy.zeros((len(value_matrix), len(value_matrix)))
 
     # The actual experiment begins here.
-    for optimization_set in optimization_sets:
+    for optimization_set in optimization_sets:  # Loop through all the sets that we chose for optimization.
         class_set, feature_set = parse_csv(optimization_set)
 
         # 'Cross Validation' parameters
@@ -40,7 +40,7 @@ def experiment_2_optimization():
         cross_val = sklearn.cross_validation.KFold(n=n_elements,
                                                    n_folds=n_folds)
 
-        print("Current data set:\t{}".format(optimization_set))
+        print_current_data_set(optimization_set)
 
         for i in range(len(value_matrix)):
             for j in range(len(value_matrix)):  # Horizontal values in our table
@@ -51,11 +51,11 @@ def experiment_2_optimization():
                                      n_neighbors=value_matrix[j],
                                      leaf_size=value_matrix[i])
 
-                classifiers["custom_random_forest"] = RandomForest(n_estimators=value_matrix[j],
-                                                                   max_depth=value_matrix[i])
-
-                classifiers["sklearn_random_forest"] = RandomForestClassifier(n_estimators=value_matrix[j],
-                                                                              max_depth=value_matrix[i])
+                # classifiers["custom_random_forest"] = RandomForest(n_estimators=value_matrix[j],
+                #                                                    max_depth=value_matrix[i])
+                #
+                # classifiers["sklearn_random_forest"] = RandomForestClassifier(n_estimators=value_matrix[j],
+                #                                                               max_depth=value_matrix[i])
 
                 # classifiers["sklearn_decision_tree"] = DecisionTreeClassifier(min_samples_leaf = value_matrix[j],
                 #                                                               max_depth = value_matrix[i])
@@ -63,8 +63,9 @@ def experiment_2_optimization():
                 # classifiers["custom_decision_tree"] = DecisionTree(min_samples_leaf = value_matrix[j],
                 #                                                    max_depth = value_matrix[i])
 
-                # classifiers["sklearn_neighbors"] = KNeighborsClassifier(n_neighbors = value_matrix[j],
-                #                                                         leaf_size = value_matrix[i])
+                classifiers["sklearn_neighbors"] = KNeighborsClassifier(n_neighbors = value_matrix[j],
+                                                                        leaf_size = value_matrix[i],
+                                                                        algorithm = 'kd_tree')
 
                 for key, classifier in classifiers.items():
                     result = list()
@@ -108,11 +109,17 @@ def experiment_2_testing():
     ]
 
     classifiers = {
-        "custom_decision_tree": None,
-        "custom_random_forest": None,
-        "sklearn_decision_tree": None,
-        "sklearn_random_forest": None,
-        "sklearn_neighbors": None,
+        "custom_decision_tree": DecisionTree(min_samples_leaf = 10,
+                                             max_depth = 50),
+        "custom_random_forest": RandomForest(n_estimators = 50,
+                                             max_depth = 40),
+        "sklearn_decision_tree": DecisionTreeClassifier(min_samples_leaf = 10,
+                                                        max_depth = 50),
+        "sklearn_random_forest": RandomForestClassifier(n_estimators = 50,
+                                                        max_depth = 40),
+        "sklearn_neighbors": KNeighborsClassifier(n_neighbors = 20,
+                                                  leaf_size = 20,
+                                                  algorithm = 'kd_tree'),
     }
 
     predictions = {
@@ -135,7 +142,7 @@ def experiment_2_testing():
         cross_val = sklearn.cross_validation.KFold(n=n_elements,
                                                    n_folds=n_folds)
 
-        print("Current data set:\t{}".format(test_set))
+        print_current_data_set(test_set)
 
         for key, classifier in classifiers.items():
             result = list()
@@ -148,8 +155,8 @@ def experiment_2_testing():
                 test_feature_set = feature_set[test]
                 test_class_set = class_set[test]
 
-                classifier.fit(X=train_feature_set,
-                               y=train_class_set.ravel())
+                classifier.fit(X = train_feature_set,
+                               y = train_class_set.ravel())
 
                 prediction = classifier.predict(test_feature_set)
 
@@ -158,8 +165,8 @@ def experiment_2_testing():
 
                 result.append([test_class_set, prediction])
 
-            for r1 in range(len(result)):
-                avg_accuracy += sklearn.metrics.accuracy_score(result[r1][0], result[r1][1])
+            for row in range(len(result)):
+                avg_accuracy += sklearn.metrics.accuracy_score(result[row][0], result[row][1])
 
             avg_accuracy /= float(len(result))
 

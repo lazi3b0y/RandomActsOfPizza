@@ -8,7 +8,7 @@ from time import time
 
 import warnings
 import numpy
-import sklearn
+import sklearn.metrics
 
 
 def experiment_1():
@@ -59,34 +59,28 @@ def experiment_1():
     min_samples_leaf = 30
     max_features = None
 
-    # Creation of the two Decision Tree Classifiers we'll be using during this experiment.
-    # 'custom_decision_tree' is our own implementation of hunt's algorithm, while 'sklearn_decision_tree'
-    # is scikit-learn's version of a Decision Tree Classifier.
-    custom_decision_tree = DecisionTree(max_depth = max_depth,
-                                        min_samples_leaf = min_samples_leaf,
-                                        max_features = max_features)
-
-    sklearn_decision_tree = DecisionTreeClassifier(max_depth = max_depth,
-                                                   min_samples_leaf = min_samples_leaf,
-                                                   max_features = max_features)
-
-    # Creation of the two Random Forest Classifiers we'll be using during this experiment.
-    # 'custom_random_forest' is our own implementation, while 'sklearn_random_forest'
-    # is scikit-learn's version of a Decision Tree Classifier.
-    custom_random_forest = RandomForest(max_depth = max_depth,
-                                        min_samples_leaf = min_samples_leaf,
-                                        max_features = max_features)
-
-    sklearn_random_forest = RandomForestClassifier(max_depth = max_depth,
-                                                   min_samples_leaf = min_samples_leaf,
-                                                   max_features = max_features)
-
-    # A dictionary containing our classifiers that were initialized before.
     classifiers = {
-        "custom_decision_tree": custom_decision_tree,
-        "custom_random_forest": custom_random_forest,
-        "sklearn_decision_tree": sklearn_decision_tree,
-        "sklearn_random_forest": sklearn_random_forest,
+        # Creation of the two Decision Tree Classifiers we'll be using during this experiment.
+        # 'custom_decision_tree' is our own implementation of hunt's algorithm, while 'sklearn_decision_tree'
+        # is scikit-learn's version of a Decision Tree Classifier.
+        "custom_decision_tree": DecisionTree(max_depth=max_depth,
+                                             min_samples_leaf=min_samples_leaf,
+                                             max_features=max_features),
+
+        "sklearn_decision_tree": DecisionTreeClassifier(max_depth=max_depth,
+                                                        min_samples_leaf=min_samples_leaf,
+                                                        max_features=max_features),
+        # Creation of the two Random Forest Classifiers we'll be using during this experiment.
+        # 'custom_random_forest' is our own implementation, while 'sklearn_random_forest'
+        # is scikit-learn's version of a Decision Tree Classifier
+        # .
+        "custom_random_forest": RandomForest(max_depth=max_depth,
+                                             min_samples_leaf=min_samples_leaf,
+                                             max_features=max_features),
+
+        "sklearn_random_forest": RandomForestClassifier(max_depth=max_depth,
+                                                        min_samples_leaf=min_samples_leaf,
+                                                        max_features=max_features),
     }
 
     # Initialization of the dictionary where our predictions will be stored.
@@ -155,26 +149,39 @@ def experiment_1():
                 result.append([test_class_set.ravel(), prediction])
 
             for row in range(len(result)):
-                avg_accuracy += sklearn.metrics.accuracy_score(result[row][0], result[row][1])
-                avg_precision += sklearn.metrics.precision_score(result[row][0], result[row][1], average = average)
-                avg_recall += sklearn.metrics.recall_score(result[row][0], result[row][1], average = average)
+                avg_accuracy += sklearn.metrics.accuracy_score(y_pred = result[row][0],
+                                                               y_true = result[row][1])
 
-                # Add the accuracy score to our array of values to later be used when comparing our classifiers.
-                predictions[key].append(sklearn.metrics.accuracy_score(result[row][0], result[row][1]))
+                avg_precision += sklearn.metrics.precision_score(y_pred = result[row][0],
+                                                                 y_true = result[row][1],
+                                                                 average = average)
+
+                avg_recall += sklearn.metrics.recall_score(y_pred = result[row][0],
+                                                           y_true = result[row][1],
+                                                           average = average)
+
+                # Add the accuracy score to our array of values to later be used when comparing classifiers.
+                predictions[key].append(sklearn.metrics.accuracy_score(y_pred = result[row][0],
+                                                                       y_true = result[row][1]))
 
                 uniq_values = numpy.unique(result[row][0])
-                pred_pbty_row = numpy.array(pred_pbty[row])
-                maximized_pbty_sub_set = numpy.array([max(pbty_pair) for pbty_pair in pred_pbty_row])
+                pred_pbty_sub_set = numpy.array(pred_pbty[row])
+                maximized_pbty_sub_set = numpy.array([max(pbty_pair) for pbty_pair in pred_pbty_sub_set])
 
                 if len(uniq_values) > 2:
                     for value in uniq_values:
-                        false_posi_rates, true_posi_rates, thresholds = sklearn.metrics.roc_curve(result[row][0], maximized_pbty_sub_set, int(value))
-                        avg_auc += sklearn.metrics.auc(false_posi_rates, true_posi_rates)
+                        false_posi_rates, true_posi_rates, thresholds = sklearn.metrics.roc_curve(y_true = result[row][0],
+                                                                                                  pos_label = int(value),
+                                                                                                  y_pred = maximized_pbty_sub_set)
+                        avg_auc += sklearn.metrics.auc(x = false_posi_rates,
+                                                       y = true_posi_rates)
 
                     avg_auc /= uniq_values.size / 2.0
                 else:
-                    false_posi_rates, true_posi_rates, thresholds = sklearn.metrics.roc_curve(result[row][0], maximized_pbty_sub_set)
-                    avg_auc += sklearn.metrics.auc(false_posi_rates, true_posi_rates)
+                    false_posi_rates, true_posi_rates, thresholds = sklearn.metrics.roc_curve(y_true = result[row][0],
+                                                                                              y_pred = maximized_pbty_sub_set)
+                    avg_auc += sklearn.metrics.auc(x = false_posi_rates,
+                                                   y = true_posi_rates)
 
             # print_statistics(avg_accuracy, avg_precision, avg_recall, avg_auc, avg_train_time, avg_test_time, result)
 
