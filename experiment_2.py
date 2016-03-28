@@ -5,10 +5,10 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from utils.print import print_clf_parameters, print_clf_acc_table, print_wilcoxon, print_current_data_set
 from utils.parse import parse_csv
-from scipy.stats import wilcoxon
 
 import numpy
 import sklearn
+import warnings
 
 __author__ = "Simon & Oskar"
 
@@ -94,12 +94,12 @@ def experiment_2_optimization():
                     avg_accuracy /= float(len(result))
                     results[i][j] += avg_accuracy / len(optimization_sets) / len(classifiers)
 
-    print_clf_acc_table(hori_values=value_matrix,
-                        vert_values=value_matrix,
-                        values=results,
+    print_clf_acc_table(hori_values = value_matrix,
+                        vert_values = value_matrix,
+                        values = results,
                         # hori_label = "n_estimators" for random forest, "n_neighbors"
                         # for nearest neighbor and "min_samples_leaf" for decision tree
-                        hori_label="n_estimators")
+                        hori_label = "n_estimators")
 
 
 def experiment_2_testing():
@@ -123,11 +123,11 @@ def experiment_2_testing():
     }
 
     predictions = {
-        "custom_decision_tree": 0.0,
-        "custom_random_forest": 0.0,
-        "sklearn_decision_tree": 0.0,
-        "sklearn_random_forest": 0.0,
-        "sklearn_neighbors": 0.0,
+        "custom_decision_tree": [0.0],
+        "custom_random_forest": [0.0],
+        "sklearn_decision_tree": [0.0],
+        "sklearn_random_forest": [0.0],
+        "sklearn_neighbors": [0.0],
     }
 
     # The actual experiment begins here.
@@ -139,8 +139,8 @@ def experiment_2_testing():
         n_elements = feature_set.shape[0]
 
         # The 10x10 Fold Cross Validation.
-        cross_val = sklearn.cross_validation.KFold(n=n_elements,
-                                                   n_folds=n_folds)
+        cross_val = sklearn.cross_validation.KFold(n = n_elements,
+                                                   n_folds = n_folds)
 
         print_current_data_set(test_set)
 
@@ -166,18 +166,20 @@ def experiment_2_testing():
                 result.append([test_class_set, prediction])
 
             for row in range(len(result)):
-                avg_accuracy += sklearn.metrics.accuracy_score(result[row][0], result[row][1])
+                avg_accuracy += sklearn.metrics.accuracy_score(y_true = result[row][0],
+                                                               y_pred = result[row][1])
 
             avg_accuracy /= float(len(result))
 
-            predictions[key] += avg_accuracy
+            predictions[key][0] += avg_accuracy
 
-    for p in predictions:
-        p /= len(test_sets)
+    for key in predictions:
+        predictions[key][0] /= float(len(test_sets))
 
     print_wilcoxon(predictions)
 
 
 if __name__ == "__main__":
-    experiment_2_optimization()
-    # experiment_2_testing()
+    warnings.filterwarnings("ignore")
+    # experiment_2_optimization()
+    experiment_2_testing()
