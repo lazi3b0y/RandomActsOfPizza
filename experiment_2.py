@@ -109,17 +109,17 @@ def experiment_2_testing():
     ]
 
     classifiers = {
-        "custom_decision_tree": DecisionTree(min_samples_leaf = 10,
-                                             max_depth = 50),
-        "custom_random_forest": RandomForest(n_estimators = 50,
-                                             max_depth = 40),
-        "sklearn_decision_tree": DecisionTreeClassifier(min_samples_leaf = 10,
-                                                        max_depth = 50),
-        "sklearn_random_forest": RandomForestClassifier(n_estimators = 50,
-                                                        max_depth = 40),
-        "sklearn_neighbors": KNeighborsClassifier(n_neighbors = 20,
-                                                  leaf_size = 20,
-                                                  algorithm = 'kd_tree'),
+        "custom_decision_tree": DecisionTree(min_samples_leaf=10,
+                                             max_depth=50),
+        "custom_random_forest": RandomForest(n_estimators=50,
+                                             max_depth=40),
+        "sklearn_decision_tree": DecisionTreeClassifier(min_samples_leaf=10,
+                                                        max_depth=50),
+        "sklearn_random_forest": RandomForestClassifier(n_estimators=50,
+                                                        max_depth=40),
+        "sklearn_neighbors": KNeighborsClassifier(n_neighbors=20,
+                                                  leaf_size=20,
+                                                  algorithm='kd_tree'),
     }
 
     # The actual experiment begins here.
@@ -139,8 +139,8 @@ def experiment_2_testing():
         n_elements = feature_set.shape[0]
 
         # The 10x10 Fold Cross Validation.
-        cross_val = sklearn.cross_validation.KFold(n = n_elements,
-                                                   n_folds = n_folds)
+        cross_val = sklearn.cross_validation.KFold(n=n_elements,
+                                                   n_folds=n_folds)
 
         print_current_data_set(test_set)
 
@@ -155,8 +155,8 @@ def experiment_2_testing():
                 test_feature_set = feature_set[test]
                 test_class_set = class_set[test]
 
-                classifier.fit(X = train_feature_set,
-                               y = train_class_set.ravel())
+                classifier.fit(X=train_feature_set,
+                               y=train_class_set.ravel())
 
                 prediction = classifier.predict(test_feature_set)
 
@@ -166,8 +166,8 @@ def experiment_2_testing():
                 result.append([test_class_set, prediction])
 
             for row in range(len(result)):
-                avg_accuracy += sklearn.metrics.accuracy_score(y_true = result[row][0],
-                                                               y_pred = result[row][1])
+                avg_accuracy += sklearn.metrics.accuracy_score(y_true=result[row][0],
+                                                               y_pred=result[row][1])
 
             avg_accuracy /= float(len(result))
 
