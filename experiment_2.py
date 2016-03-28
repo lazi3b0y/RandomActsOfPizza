@@ -122,7 +122,7 @@ def experiment_2_testing():
                                                   algorithm = 'kd_tree'),
     }
 
-    predictions = {
+    accuracies = {
         "custom_decision_tree": [0.0],
         "custom_random_forest": [0.0],
         "sklearn_decision_tree": [0.0],
@@ -171,12 +171,12 @@ def experiment_2_testing():
 
             avg_accuracy /= float(len(result))
 
-            predictions[key][0] += avg_accuracy
+            accuracies[key][0] += avg_accuracy
 
-    for key in predictions:
-        predictions[key][0] /= float(len(test_sets))
+    for key in accuracies:
+        accuracies[key][0] /= float(len(test_sets))
 
-    print_wilcoxon(predictions)
+    print_wilcoxon(accuracies)
 
 
 if __name__ == "__main__":
