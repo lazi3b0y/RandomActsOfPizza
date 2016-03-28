@@ -2,6 +2,7 @@ import scipy.stats
 from numpy import array_str
 from collections import Counter
 from scipy.stats import wilcoxon
+from utils.utility import mcnemar_midp
 
 __author__ = "Simon & Oskar"
 
@@ -105,4 +106,13 @@ def print_accuracies(accuracies):
     print("\tAccuracies")
     print("##############################")
     for key, value in accuracies.items():
-        print("{}: {}".format(key, value[0]))
+        print("{}: {}".format(key, value))
+
+def print_mcnemar(corr_predictions):
+    print("##############################")
+    print("\tMcNemar's test results")
+    print("##############################")
+    for key, value in corr_predictions.items():
+        for key_2, value_2 in corr_predictions.items():
+            if key_2 != key:
+                print("{} vs {}: {}". format(key, key_2, mcnemar_midp(value, value_2)))

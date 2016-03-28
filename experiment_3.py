@@ -3,9 +3,8 @@ from classifiers.random_forest import RandomForest
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from utils.print import print_current_data_set
+from utils.print import print_current_data_set, print_mcnemar, print_accuracies
 from utils.parse import parse_csv
-from scipy.stats import binom
 
 import sklearn
 import numpy
@@ -43,9 +42,14 @@ def experiment_3():
 
     print_current_data_set(data_set)
     corr_predictions = {}
+    accuracies = {}
 
     for key, classifier in classifiers.items():
+        result = list()
         corr_predictions[key] = 0
+        accuracies[key] = 0.0
+        avg_accuracy = 0.0
+
         for train, test in cross_val:
             train_features = features[train]
             train_classes = classes[train]
@@ -58,8 +62,12 @@ def experiment_3():
 
             prediction = classifier.predict(test_features)
 
-            test_classes = test_classes.astype(numpy.float).ravel()
+            test_classes = test_classes.astype(numpy.float)
             prediction = prediction.astype(numpy.float)
+
+            result.append([test_classes, prediction])
+
+            test_classes = test_classes.ravel()
 
             temp = 0
             for i in range(len(test_classes)):
@@ -68,31 +76,18 @@ def experiment_3():
 
             corr_predictions[key] += temp
 
-    for key, value in corr_predictions.items():
-        for key_2, value_2 in corr_predictions.items():
-            if key_2 != key:
-                print("{} vs {}: {}". format(key, key_2, mcnemar_midp(value, value_2)))
+        for row in range(len(result)):
+            avg_accuracy += sklearn.metrics.accuracy_score(y_true=result[row][0],
+                                                           y_pred=result[row][1])
 
+        avg_accuracy /= float(len(result))
 
-def mcnemar_midp(b, c):
-    # Found at https://gist.github.com/kylebgorman/c8b3fb31c1552ecbaafb
-    """
-    Compute McNemar's test using the "mid-p" variant suggested by:
+        accuracies[key] += avg_accuracy
 
-    M.W. Fagerland, S. Lydersen, P. Laake. 2013. The McNemar test for
-    binary matched-pairs data: Mid-p and asymptotic are better than exact
-    conditional. BMC Medical Research Methodology 13: 91.
+    print_accuracies(accuracies)
 
-    `b` is the number of observations correctly labeled by the first---but
-    not the second---system; `c` is the number of observations correctly
-    labeled by the second---but not the first---system.
-    """
-    n = b + c
-    x = min(b, c)
-    dist = binom(n, .5)
-    p = 2. * dist.cdf(x)
-    midp = p - dist.pmf(x)
-    return midp
+    print_mcnemar(corr_predictions)
+
 
 if __name__ == "__main__":
     # warnings.filterwarnings("ignore")

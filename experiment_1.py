@@ -130,23 +130,23 @@ def experiment_1():
 
             # print_label(key)
             for train, test in cross_val:
-                train_feature_set = feature_set[train]
-                train_class_set = class_set[train]
-                test_feature_set = feature_set[test]
-                test_class_set = class_set[test]
+                train_features = feature_set[train]
+                train_classes = class_set[train]
+                test_features = feature_set[test]
+                test_classes = class_set[test]
 
                 start = time()
-                classifier.fit(X = train_feature_set,
-                               y = train_class_set.ravel())
+                classifier.fit(X = train_features,
+                               y = train_classes.ravel())
 
                 avg_train_time += time() - start
 
                 start = time()
-                prediction = classifier.predict(test_feature_set)
-                pred_pbty.append(classifier.predict_proba(test_feature_set))
+                prediction = classifier.predict(test_features)
+                pred_pbty.append(classifier.predict_proba(test_features))
                 avg_test_time += time() - start
 
-                result.append([test_class_set.ravel(), prediction])
+                result.append([test_classes.ravel(), prediction])
 
             for row in range(len(result)):
                 avg_accuracy += sklearn.metrics.accuracy_score(y_pred = result[row][0],

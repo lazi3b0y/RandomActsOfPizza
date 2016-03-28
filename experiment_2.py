@@ -73,20 +73,20 @@ def experiment_2_optimization():
                     avg_accuracy = 0.0
 
                     for train, test in cross_val:
-                        train_feature_set = feature_set[train]
+                        train_features = feature_set[train]
                         train_class_set = class_set[train]
-                        test_feature_set = feature_set[test]
-                        test_class_set = class_set[test]
+                        test_features = feature_set[test]
+                        test_classes = class_set[test]
 
-                        classifier.fit(X=train_feature_set,
+                        classifier.fit(X=train_features,
                                        y=train_class_set.ravel())
 
-                        prediction = classifier.predict(test_feature_set)
+                        prediction = classifier.predict(test_features)
 
-                        test_class_set = test_class_set.astype(numpy.float)
+                        test_classes = test_classes.astype(numpy.float)
                         prediction = prediction.astype(numpy.float)
 
-                        result.append([test_class_set, prediction])
+                        result.append([test_classes, prediction])
 
                     for r1 in range(len(result)):
                         avg_accuracy += sklearn.metrics.accuracy_score(result[r1][0], result[r1][1])
@@ -124,13 +124,7 @@ def experiment_2_testing():
 
     # The actual experiment begins here.
     for test_set in test_sets:
-        accuracies = {
-            "custom_decision_tree": [0.0],
-            "custom_random_forest": [0.0],
-            "sklearn_decision_tree": [0.0],
-            "sklearn_random_forest": [0.0],
-            "sklearn_neighbors": [0.0],
-        }
+        accuracies = {}
 
         class_set, feature_set = parse_csv(test_set)
 
@@ -146,24 +140,24 @@ def experiment_2_testing():
 
         for key, classifier in classifiers.items():
             result = list()
-
+            accuracies[key] = 0.0
             avg_accuracy = 0.0
 
             for train, test in cross_val:
-                train_feature_set = feature_set[train]
+                train_features = feature_set[train]
                 train_class_set = class_set[train]
-                test_feature_set = feature_set[test]
-                test_class_set = class_set[test]
+                test_features = feature_set[test]
+                test_classes = class_set[test]
 
-                classifier.fit(X=train_feature_set,
+                classifier.fit(X=train_features,
                                y=train_class_set.ravel())
 
-                prediction = classifier.predict(test_feature_set)
+                prediction = classifier.predict(test_features)
 
-                test_class_set = test_class_set.astype(numpy.float)
+                test_classes = test_classes.astype(numpy.float)
                 prediction = prediction.astype(numpy.float)
 
-                result.append([test_class_set, prediction])
+                result.append([test_classes, prediction])
 
             for row in range(len(result)):
                 avg_accuracy += sklearn.metrics.accuracy_score(y_true=result[row][0],
@@ -171,7 +165,7 @@ def experiment_2_testing():
 
             avg_accuracy /= float(len(result))
 
-            accuracies[key][0] += avg_accuracy
+            accuracies[key] += avg_accuracy
 
         print_accuracies(accuracies)
 
