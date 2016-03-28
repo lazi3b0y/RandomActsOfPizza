@@ -3,7 +3,7 @@ from classifiers.random_forest import RandomForest
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from utils.print import print_clf_parameters, print_clf_acc_table, print_wilcoxon, print_current_data_set
+from utils.print import print_clf_parameters, print_clf_acc_table, print_wilcoxon, print_current_data_set, print_accuracies
 from utils.parse import parse_csv
 
 import numpy
@@ -122,16 +122,16 @@ def experiment_2_testing():
                                                   algorithm = 'kd_tree'),
     }
 
-    accuracies = {
-        "custom_decision_tree": [0.0],
-        "custom_random_forest": [0.0],
-        "sklearn_decision_tree": [0.0],
-        "sklearn_random_forest": [0.0],
-        "sklearn_neighbors": [0.0],
-    }
-
     # The actual experiment begins here.
     for test_set in test_sets:
+        accuracies = {
+            "custom_decision_tree": [0.0],
+            "custom_random_forest": [0.0],
+            "sklearn_decision_tree": [0.0],
+            "sklearn_random_forest": [0.0],
+            "sklearn_neighbors": [0.0],
+        }
+
         class_set, feature_set = parse_csv(test_set)
 
         # 'Cross Validation' parameters
@@ -173,10 +173,7 @@ def experiment_2_testing():
 
             accuracies[key][0] += avg_accuracy
 
-    for key in accuracies:
-        accuracies[key][0] /= float(len(test_sets))
-
-    print_wilcoxon(accuracies)
+        print_accuracies(accuracies)
 
 
 if __name__ == "__main__":

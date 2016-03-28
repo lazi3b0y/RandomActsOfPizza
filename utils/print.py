@@ -59,14 +59,14 @@ def print_statistics(avg_accuracy, avg_precision, avg_recall, avg_auc, avg_train
 def print_wilcoxon(predictions):
     print("############################################################################")
     print("Wilcoxon Result for Decision Tree: ")
-    print(wilcoxon(x = predictions['custom_decision_tree'],
-                   y = predictions['sklearn_decision_tree']))
+    print(wilcoxon(x=predictions['custom_decision_tree'],
+                   y=predictions['sklearn_decision_tree']))
     print("Wilcoxon Result for Random Forest: ")
-    print(wilcoxon(x = predictions['custom_random_forest'],
-                   y = predictions['sklearn_random_forest']))
+    print(wilcoxon(x=predictions['custom_random_forest'],
+                   y=predictions['sklearn_random_forest']))
     if predictions['sklearn_neighbors']:
         print("Wilcoxon Result for Nearest Neighbors: ")
-        print(wilcoxon(x = predictions['sklearn_neighbors']))
+        print(wilcoxon(x=predictions['sklearn_neighbors']))
     print("############################################################################\n\n")
 
 
@@ -98,3 +98,11 @@ def print_clf_acc_table(hori_label, hori_values, vert_values, values):
         for j in range(len(values[i])):
             print("{0:5f}\t".format(values[i][j]), end="")
         print("")
+
+
+def print_accuracies(accuracies):
+    print("##############################")
+    print("\tAccuracies")
+    print("##############################")
+    for key, value in accuracies.items():
+        print("{}: {}".format(key, value[0]))
